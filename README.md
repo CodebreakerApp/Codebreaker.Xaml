@@ -1,5 +1,7 @@
 # Codebreaker.XAML
 
+This repository contains the code for all XAML based clients of [Codebreaker](https://github.com/CodebreakerApp).
+
 ## Builds
 
 ### Libraries
