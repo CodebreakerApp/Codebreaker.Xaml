@@ -25,14 +25,7 @@ This repository contains the code for all XAML based clients of [Codebreaker](ht
 
 NuGet packages for Codebreaker can be found on the official [NuGet server](https://www.nuget.org/packages?q=Tags%3A%22Codebreaker%22).
 
-## Codebreaker Services
-
-* REST API to play games, writes information to Cosmos
-* Bot who plays games calling the API. The bot can be invoked calling commands from a REST API
-* REST API for reporting
-* SignalR Services to show live games
-
-## Codebreaker Client apps
+## Codebreaker Client Apps
 
 * Blazor app to play games and show game results using [MudBlazor](https://www.mudblazor.com/), [FastBlazor](https://github.com/microsoft/fast-blazor), and native, pure Blazor with only CSS
 * WinUI app to play games calling the API, and show live services
@@ -43,26 +36,8 @@ NuGet packages for Codebreaker can be found on the official [NuGet server](https
 * [Blazor MudBlazor](https://codebreaker-mud.azurewebsites.net/)
 * [Blazor Microsoft.Fast](https://codebreaker-fast.azurewebsites.net/)
 
-## Azure Services in use
-
-* Azure Container Apps
-* Azure Cosmos DB
-* Azure Active Directory B2C
-* Azure SignalR Services
-* Azure App Configuration
-* Azure Event Hub
-* Azure App Services
-
 ## To be defined and developed
 
 * Authentication with Microsoft, Facebook, Google accounts
-* Database cleanup-service - running with a timer to cleanup the database
 * Platform Uno client
-* Services using Dapr
-* Grpc alternative for Game API
-
-## More Azure Services that will be used
-
-* Azure Message Queue (an alternative trigger for the Bot)
-* Azure Key Vault
-* Azure Event Grid
+* Avalonia client
