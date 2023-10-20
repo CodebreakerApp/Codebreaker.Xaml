@@ -21,9 +21,9 @@ This repository contains the code for all XAML based clients of [Codebreaker](ht
 
 [Guidelines](guidelines.md)
 
-## Codebreaker Package Feed
+## Codebreaker NuGet Packages
 
-[Codebreaker Packages Feed](https://pkgs.dev.azure.com/cnilearn/codebreakerpackages/_packaging/codebreaker/nuget/v3/index.json)
+NuGet packages for Codebreaker can be found on the official [NuGet server](https://www.nuget.org/packages?q=Tags%3A%22Codebreaker%22).
 
 ## Codebreaker Services
 
