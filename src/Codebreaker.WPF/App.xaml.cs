@@ -1,4 +1,9 @@
-﻿namespace Codebreaker.WPF;
+﻿using Codebreaker.ViewModels.Contracts.Services;
+using Codebreaker.WPF.Services;
+using Codebreaker.WPF.Services.Navigation;
+using Codebreaker.WPF.Views.Pages;
+
+namespace Codebreaker.WPF;
 
 /// <summary>
 /// Interaction logic for App.xaml
@@ -23,8 +28,13 @@ public sealed partial class App : Application, IDisposable
             })
             .ConfigureServices((context, services) =>
             {
-                services.Configure<GamePageViewModelOptions>(options => options.EnableDialogs = true);
-                services.AddTransient<IDialogService, Services.WPFDialogService>();
+                services.Configure<GamePageViewModelOptions>(options => { });
+                services.AddNavigation<WPFNavigationService>(pages => pages
+                    .Configure<GamePage>("GamePage")
+                    .Configure<TestPage>("TestPage")
+                    .ConfigureInitialPage<GamePage>());
+                services.AddTransient<IDialogService, WPFDialogService>();
+                services.AddSingleton<IInfoBarService, InfoBarService>();
                 services.AddScoped<GamePageViewModel>();
                 services.AddHttpClient<IGamesClient, GamesClient>(client =>
                 {
@@ -37,11 +47,7 @@ public sealed partial class App : Application, IDisposable
         DefaultScope = _host.Services.CreateScope();
     }
 
-    public void Dispose()
-    {
-        DefaultScope.Dispose();
-        _host.Dispose();
-    }
+    public static new App Current => (Application.Current as App) ?? throw new InvalidOperationException("The current application is no \"App\"");
 
     public IServiceScope DefaultScope { get; private init; }
 
@@ -51,8 +57,9 @@ public sealed partial class App : Application, IDisposable
         where T : class =>
         DefaultScope.ServiceProvider.GetRequiredService<T>();
 
-    protected override void OnActivated(EventArgs e)
+    public void Dispose()
     {
-        base.OnActivated(e);
+        DefaultScope.Dispose();
+        _host.Dispose();
     }
 }

@@ -31,7 +31,7 @@ public partial class InfoMessageViewModel(Action closeAction) : ObservableObject
     [NotifyPropertyChangedFor(nameof(HasAction))]
     private string? _actionText = "OK";
 
-    public bool HasAction => ExecuteActionCommand is not null && ActionText is not null;
+    public bool HasAction => Action is not null && ActionText is not null;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(CloseCommand))]

@@ -1,0 +1,42 @@
+﻿<UserControl x:Class="Codebreaker.WPF.Views.Components.InfoBarArea"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Codebreaker.WPF.Views.Components"
+             xmlns:converters="clr-namespace:Codebreaker.WPF.Converters"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <converters:InfoBarSeverityToBrushConverter x:Key="InfoBarSeverityToBrushConverter" />
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    </UserControl.Resources>
+    <ItemsControl ItemsSource="{Binding ViewModel.Messages, Mode=OneWay}" MaxHeight="200">
+        <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+                <StackPanel Orientation="Vertical" />
+            </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+            <DataTemplate>
+                <Border BorderBrush="{Binding Severity, Mode=OneTime, Converter={StaticResource InfoBarSeverityToBrushConverter}}" BorderThickness="2" Margin="5">
+                    <Grid Margin="5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Title, Mode=OneTime}" FontSize="17" FontWeight="SemiBold" />
+                        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0">
+                            <TextBlock Text="{Binding Message, Mode=OneTime}" />
+                            <Button Command="{Binding ExecuteActionCommand, Mode=OneTime}" Content="{Binding ActionText, Mode=OneTime}" Padding="10,2" Margin="20,0,0,0" Visibility="{Binding HasAction, Mode=OneTime, Converter={StaticResource BoolToVisibilityConverter}}" />
+                        </StackPanel>
+                        <Button Grid.Row="0" Grid.Column="1" Command="{Binding CloseCommand, Mode=OneTime}" Content="X" Padding="8,2" Background="Transparent" BorderBrush="Transparent" Visibility="{Binding IsClosable, Mode=OneTime, Converter={StaticResource BoolToVisibilityConverter}}" />
+                    </Grid>
+                </Border>
+            </DataTemplate>
+        </ItemsControl.ItemTemplate>
+    </ItemsControl>
+</UserControl>
