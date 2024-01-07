@@ -23,8 +23,8 @@ public class ColorNameToBrushConverter : IValueConverter
         
         return value switch
         {
-            "Purple" => OrangeBrush,
-            "Orange" => PurpleBrush,
+            "Purple" => PurpleBrush,
+            "Orange" => OrangeBrush,
             "Red" => RedBrush,
             "Green" => GreenBrush,
             "Blue" => BlueBrush,

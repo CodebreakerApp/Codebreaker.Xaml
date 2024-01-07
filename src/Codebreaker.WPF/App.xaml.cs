@@ -1,4 +1,6 @@
-﻿namespace Codebreaker.WPF;
+﻿using Codebreaker.ViewModels.Contracts.Services;
+
+namespace Codebreaker.WPF;
 
 /// <summary>
 /// Interaction logic for App.xaml
@@ -23,7 +25,8 @@ public sealed partial class App : Application, IDisposable
             })
             .ConfigureServices((context, services) =>
             {
-                services.Configure<GamePageViewModelOptions>(options => options.EnableDialogs = true);
+                services.Configure<GamePageViewModelOptions>(options => { });
+                services.AddScoped<IInfoBarService, InfoBarService>();
                 services.AddTransient<IDialogService, Services.WPFDialogService>();
                 services.AddScoped<GamePageViewModel>();
                 services.AddHttpClient<IGamesClient, GamesClient>(client =>

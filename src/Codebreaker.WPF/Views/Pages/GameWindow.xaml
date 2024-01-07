@@ -54,6 +54,12 @@
                     Command="{Binding ViewModel.ErrorMessage.ActionCommand, Mode=OneWay}" />
             </Grid>
         </StackPanel>-->
+        <components:GameResultDisplay
+            Panel.ZIndex="1"
+            Grid.Row="0"
+            GameMode="{Binding ViewModel.GameStatus, Mode=OneWay, ElementName=Self}"
+            WonCommand="{Binding ViewModel.StartGameCommand, Mode=OneTime, ElementName=Self}"
+            LostCommand="{Binding ViewModel.StartGameCommand, Mode=OneTime, ElementName=Self}" />
 
         <Grid Grid.Row="1" Margin="8" Visibility="{Binding ViewModel.GameStatus, Mode=OneWay, Converter={StaticResource GameStatusVisibilityConverter}, ConverterParameter=Start}">
             <Grid.RowDefinitions>
