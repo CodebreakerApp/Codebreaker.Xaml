@@ -17,15 +17,17 @@ internal sealed partial class PegSelectionComponent : UserControl, IRecipient<Ga
     public GamePageViewModel ViewModel
     {
         get => (GamePageViewModel)GetValue(ViewModelProperty);
-        set
-        {
-            SetValue(ViewModelProperty, value);
-            DataContext = ViewModel;
-        }
+        set => SetValue(ViewModelProperty, value);
     }
 
     public static readonly DependencyProperty ViewModelProperty =
-        DependencyProperty.Register("ViewModel", typeof(GamePageViewModel), typeof(PegSelectionComponent), new PropertyMetadata(null));
+        DependencyProperty.Register("ViewModel", typeof(GamePageViewModel), typeof(PegSelectionComponent), new PropertyMetadata(null, propertyChangedCallback: OnViewModelChanged));
+
+    private static void OnViewModelChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
+    {
+        var @this = (PegSelectionComponent)dependencyObject;
+        @this.DataContext = (GamePageViewModel)args.NewValue;
+    }
 
     public void Receive(GameMoveMessage message)
     {
