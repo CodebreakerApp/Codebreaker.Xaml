@@ -24,10 +24,32 @@
         </animations:ImplicitAnimationSet>
     </UserControl.Resources>
     <Grid>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="Default">
+                    <VisualState.Setters>
+                        <Setter Target="WonPanel.Visibility" Value="Collapsed" />
+                        <Setter Target="LostPanel.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Won">
+                    <VisualState.Setters>
+                        <Setter Target="WonPanel.Visibility" Value="Visible" />
+                        <Setter Target="LostPanel.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Lost">
+                    <VisualState.Setters>
+                        <Setter Target="WonPanel.Visibility" Value="Collapsed" />
+                        <Setter Target="LostPanel.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
         <!-- Won - (Modern) Windows -->
         <win:StackPanel
+            x:Name="WonPanel"
             Orientation="Vertical"
-            Visibility="{x:Bind ViewModel.GameStatus, Mode=OneWay, Converter={StaticResource GameStatusToVisibilityConverter}, ConverterParameter=Won}"
             animations:Implicit.ShowAnimations="{StaticResource EntranceAnimation}"
             animations:Implicit.HideAnimations="{StaticResource ExitAnimation}">
             <Image Source="ms-appx:///Assets/Animations/WonAnimation_300_opt.gif"  MaxHeight="300" />
@@ -36,16 +58,16 @@
         </win:StackPanel>
         <!-- Won - Other Platforms -->
         <not_win:StackPanel
-            Orientation="Vertical"
-            Visibility="{x:Bind ViewModel.GameStatus, Mode=OneWay, Converter={StaticResource GameStatusToVisibilityConverter}, ConverterParameter=Won}">
+            x:Name="WonPanel"
+            Orientation="Vertical">
             <Image Source="ms-appx:///Assets/Animations/WonAnimation_300_opt.gif"  MaxHeight="300" />
             <TextBlock Text="{cme:ResourceString Name=GamePage_WonMessage}" FontSize="{ThemeResource TextStyleExtraLargeFontSize}" HorizontalAlignment="Center" Margin="0,50,0,20" />
             <Button Content="{cme:ResourceString Name=GamePage_WonButtonText}" HorizontalAlignment="Center" Margin="0,0,0,100" Command="{x:Bind ViewModel.StartGameCommand, Mode=OneTime}" />
         </not_win:StackPanel>
         <!-- Lost - (Modern) Windows -->
         <win:StackPanel
+            x:Name="LostPanel"
             Orientation="Vertical"
-            Visibility="{x:Bind ViewModel.GameStatus, Mode=OneWay, Converter={StaticResource GameStatusToVisibilityConverter}, ConverterParameter=Lost}"
             animations:Implicit.ShowAnimations="{StaticResource EntranceAnimation}"
             animations:Implicit.HideAnimations="{StaticResource ExitAnimation}">
             <Image Source="ms-appx:///Assets/Animations/LostAnimation_300_opt.gif"  MaxHeight="300" />
@@ -54,8 +76,8 @@
         </win:StackPanel>
         <!-- Lost - Other Platforms -->
         <not_win:StackPanel
-            Orientation="Vertical"
-            Visibility="{x:Bind ViewModel.GameStatus, Mode=OneWay, Converter={StaticResource GameStatusToVisibilityConverter}, ConverterParameter=Lost}">
+            x:Name="LostPanel"
+            Orientation="Vertical">
             <Image Source="ms-appx:///Assets/Animations/LostAnimation_300_opt.gif"  MaxHeight="300" />
             <TextBlock Text="{cme:ResourceString Name=GamePage_LostMessage}" FontSize="{ThemeResource TextStyleExtraLargeFontSize}" HorizontalAlignment="Center" Margin="0,50,0,20" />
             <Button Content="{cme:ResourceString Name=GamePage_LostButtonText}" HorizontalAlignment="Center" Margin="0,0,0,100" Command="{x:Bind ViewModel.StartGameCommand, Mode=OneTime}" />
