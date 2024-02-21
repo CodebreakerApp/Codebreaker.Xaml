@@ -20,6 +20,31 @@
         </Style>
     </Page.Resources>
     <Grid x:Name="ContentArea">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="Start">
+                    <VisualState.Setters>
+                        <Setter Target="StartGameArea.Visibility" Value="Visible" />
+                        <Setter Target="PegSelectionArea.Visibility" Value="Collapsed" />
+                        <Setter Target="PegScrollViewer.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Playing">
+                    <VisualState.Setters>
+                        <Setter Target="StartGameArea.Visibility" Value="Collapsed" />
+                        <Setter Target="PegSelectionArea.Visibility" Value="Visible" />
+                        <Setter Target="PegScrollViewer.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Finished">
+                    <VisualState.Setters>
+                        <Setter Target="StartGameArea.Visibility" Value="Collapsed" />
+                        <Setter Target="PegSelectionArea.Visibility" Value="Collapsed" />
+                        <Setter Target="PegScrollViewer.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
@@ -30,9 +55,9 @@
             ViewModel="{x:Bind ViewModel, Mode=OneTime}" />
         <!--Startgame section-->
         <Grid
+            x:Name="StartGameArea"
             Grid.Row="0"
-            ColumnSpacing="25"
-            Visibility="{x:Bind ViewModel.GameStatus, Mode=OneWay, Converter={StaticResource GameStatusVisibility}, ConverterParameter=Start}">
+            ColumnSpacing="25">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition Width="Auto" />
@@ -69,9 +94,9 @@
         <components:GameResultDisplay Grid.Row="0" />
         <!--Gamebar section-->
         <StackPanel
+            x:Name="PegSelectionArea"
             Orientation="Horizontal"
-            Grid.Row="1"
-            Visibility="{x:Bind ViewModel.GameStatus, Mode=OneWay, Converter={StaticResource GameStatusVisibility}, ConverterParameter=Cancelable}">
+            Grid.Row="1">
             <!--
             Cancelling the game is not yet implemented in the VM
             <Button
@@ -94,13 +119,12 @@
                     ViewModel="{x:Bind ViewModel, Mode=OneWay}" />
         </StackPanel>
         <!--Move section-->
-        <ScrollViewer Grid.Row="2" Padding="0,0,0,15" x:Name="pegScrollViewer">
+        <ScrollViewer Grid.Row="2" Padding="0,0,0,15" x:Name="PegScrollViewer">
             <ListBox 
                 x:Name="listGameMoves"
                 Background="Transparent"
                 SelectedIndex="-1"
                 IsHitTestVisible="False"
-                Visibility="{x:Bind ViewModel.GameStatus, Mode=OneWay, Converter={StaticResource GameStatusVisibility}, ConverterParameter=Running}"
                 ItemsSource="{x:Bind ViewModel.GameMoves, Mode=OneWay}"
                 ItemTemplate="{StaticResource PegsTemplate}" />
         </ScrollViewer>

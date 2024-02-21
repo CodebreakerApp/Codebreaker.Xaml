@@ -18,6 +18,22 @@ public sealed partial class GamePage : Page, IRecipient<GameMoveMessage>
         InitializeComponent();
         WeakReferenceMessenger.Default.Register(this);
         WeakReferenceMessenger.Default.UnregisterAllOnUnloaded(this);
+        ViewModel.PropertyChanged += ViewModel_PropertyChanged;
+        VisualStateManager.GoToState(this, "Start", false);
+    }
+
+    private void ViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName != nameof(GamePageViewModel.GameStatus))
+            return;
+
+        var stateName = ViewModel.GameStatus switch
+        {
+            GameMode.Started or GameMode.MoveSet => "Playing",
+            GameMode.Won or GameMode.Lost => "Finished",
+            _ => "Start",
+        };
+        VisualStateManager.GoToState(this, stateName, true);
     }
 
     public void Receive(GameMoveMessage message)
@@ -43,7 +59,7 @@ public sealed partial class GamePage : Page, IRecipient<GameMoveMessage>
             });
 
         // Scroll to bottom
-        pegScrollViewer.UpdateLayout();
-        pegScrollViewer.ScrollToVerticalOffset(pegScrollViewer.ScrollableHeight);
+        PegScrollViewer.UpdateLayout();
+        PegScrollViewer.ScrollToVerticalOffset(PegScrollViewer.ScrollableHeight);
     }
 }
