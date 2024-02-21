@@ -16,6 +16,8 @@ public partial class GamePage : UserControl, IRecipient<GameMoveMessage>
         _navigationService = App.GetService<INavigationService>();
         InitializeComponent();
         WeakReferenceMessenger.Default.Register(this);
+        ViewModel.PropertyChanged += ViewModel_PropertyChanged;
+        Classes.Add("start");
     }
 
     protected override void OnUnloaded(RoutedEventArgs e)
@@ -30,8 +32,23 @@ public partial class GamePage : UserControl, IRecipient<GameMoveMessage>
         if (message.GameMoveValue is not GameMoveValue.Completed)
             return;
 
-        pegScrollViewer.UpdateLayout();
-        pegScrollViewer.ScrollToEnd();
+        PegScrollViewer.UpdateLayout();
+        PegScrollViewer.ScrollToEnd();
+    }
+
+    private void ViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName != nameof(GamePageViewModel.GameStatus))
+            return;
+
+        var stateName = ViewModel.GameStatus switch
+        {
+            GameMode.Started or GameMode.MoveSet => "playing",
+            GameMode.Won or GameMode.Lost => "finished",
+            _ => "start",
+        };
+        Classes.Clear();
+        Classes.Add(stateName);
     }
 
     private void ToTestPageButtonClicked(object? sender, RoutedEventArgs e)

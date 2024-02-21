@@ -14,13 +14,48 @@
     <UserControl.Resources>
         <converter:GameStatusToBooleanConverter x:Key="GameStatusToBooleanConverter" />
     </UserControl.Resources>
+    <UserControl.Styles>
+        <Style Selector=".start">
+            <Style Selector="^ Grid#StartGameArea">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="^ components|PegSelectionView#PegSelectionArea">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ ScrollViewer#PegScrollViewer">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+        </Style>
+        <Style Selector=".playing">
+            <Style Selector="^ Grid#StartGameArea">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ components|PegSelectionView#PegSelectionArea">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="^ ScrollViewer#PegScrollViewer">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+        </Style>
+        <Style Selector=".finished">
+            <Style Selector="^ Grid#StartGameArea">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ components|PegSelectionView#PegSelectionArea">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ ScrollViewer#PegScrollViewer">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+        </Style>
+    </UserControl.Styles>
     <Grid RowDefinitions="Auto,*,Auto">
         <components:GameResultDisplay Grid.Row="0" />
-        <Grid Grid.Row="0"
+        <Grid x:Name="StartGameArea"
+              Grid.Row="0"
               ColumnDefinitions="3*,1*"
               RowDefinitions="Auto,Auto"
-              Margin="8"
-              IsVisible="{Binding GameStatus, Mode=OneWay, Converter={StaticResource GameStatusToBooleanConverter}, ConverterParameter=Start}">
+              Margin="8">
             <StackPanel
                 Grid.Column="0" Grid.Row="0"
                 Grid.RowSpan="{OnFormFactor 2, Mobile=1}" Grid.ColumnSpan="{OnFormFactor 1, Mobile=2}"
@@ -43,14 +78,13 @@
             </Button>
         </Grid>
         <components:PegSelectionView
+            x:Name="PegSelectionArea"
             Grid.Row="0"
-            IsVisible="{Binding GameStatus, Mode=OneWay, Converter={StaticResource GameStatusToBooleanConverter}, ConverterParameter=Cancelable}"
             Margin="{OnFormFactor '55,0,0,15', Mobile='0,0,0,15'}" />
         <ScrollViewer
-            x:Name="pegScrollViewer"
+            x:Name="PegScrollViewer"
             Padding="0,0,0,15"
-            Grid.Row="1"
-            IsVisible="{Binding GameStatus, Mode=OneWay, ConverterParameter=Running}">
+            Grid.Row="1">
             <ItemsControl
                 ItemsSource="{Binding GameMoves, Mode=OneWay}"
                 ItemTemplate="{StaticResource PegsTemplate}">

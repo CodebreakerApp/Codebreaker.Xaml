@@ -11,15 +11,37 @@
     <UserControl.Resources>
         <Converter:GameStatusToBooleanConverter x:Key="GameStatusToBooleanConverter" />
     </UserControl.Resources>
-    <Grid>
-        <StackPanel Orientation="Vertical"
-                    IsVisible="{Binding GameStatus, Mode=OneWay, Converter={StaticResource GameStatusToBooleanConverter}, ConverterParameter=Won}">
+    <UserControl.Styles>
+        <Style Selector="Grid > StackPanel">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector=".won">
+            <Style Selector="^ StackPanel#WonPanel">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="^ StackPanel#LostPanel">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+        </Style>
+        <Style Selector=".lost">
+            <Style Selector="^ StackPanel#WonPanel">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ StackPanel#LostPanel">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+        </Style>
+    </UserControl.Styles>
+    <Grid
+        x:Name="Wrapper"
+        Classes.won="{Binding GameStatus, Mode=OneWay, Converter={StaticResource GameStatusToBooleanConverter}, ConverterParameter=Won}"
+        Classes.lost="{Binding GameStatus, Mode=OneWay, Converter={StaticResource GameStatusToBooleanConverter}, ConverterParameter=Lost}">
+        <StackPanel x:Name="WonPanel" Orientation="Vertical">
             <gif:GifImage SourceUri="avares://CodeBreaker.Avalonia/Assets/Animations/WonAnimation_300_opt.gif" AutoStart="True" MaxHeight="300" />
             <TextBlock Text="Congratulations - you won the game 🎉🏆" FontSize="20" HorizontalAlignment="Center" Margin="0,50,0,20" />
             <Button Content="Great, play again" HorizontalAlignment="Center" Margin="0,0,0,50" Command="{Binding StartGameCommand, Mode=OneWay}" />
         </StackPanel>
-        <StackPanel Orientation="Vertical"
-                    IsVisible="{Binding GameStatus, Mode=OneWay, Converter={StaticResource GameStatusToBooleanConverter}, ConverterParameter=Lost}">
+        <StackPanel x:Name="LostPanel" Orientation="Vertical">
             <gif:GifImage SourceUri="avares://CodeBreaker.Avalonia/Assets/Animations/LostAnimation_300_opt.gif" AutoStart="True" MaxHeight="300" />
             <TextBlock Text="Oh no - you lost the game 😑" FontSize="20" HorizontalAlignment="Center" Margin="0,50,0,20" />
             <Button Content="Ok, try again" HorizontalAlignment="Center" Margin="0,0,0,50" Command="{Binding StartGameCommand, Mode=OneWay}" />
