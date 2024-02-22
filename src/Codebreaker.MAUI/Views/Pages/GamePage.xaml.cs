@@ -14,7 +14,7 @@ public partial class GamePage : ContentPage, IRecipient<GameMoveMessage>, IRecip
         BindingContext = viewModel;
         WeakReferenceMessenger.Default.RegisterAll(this);
         ViewModel.PropertyChanged += ViewModel_PropertyChanged;
-        GoToState("Start");
+        this.GoToState("Start");
     }
 
     public GamePageViewModel ViewModel { get; }
@@ -44,11 +44,8 @@ public partial class GamePage : ContentPage, IRecipient<GameMoveMessage>, IRecip
             GameMode.Won or GameMode.Lost => "Finished",
             _ => "Start",
         };
-        GoToState(stateName);
+        this.GoToState(stateName);
     }
-
-    private void GoToState(string stateName) =>
-        VisualStateManager.GoToState(ContentWrapper, stateName);
 
     private async void Button_Clicked(object sender, EventArgs e)
     {

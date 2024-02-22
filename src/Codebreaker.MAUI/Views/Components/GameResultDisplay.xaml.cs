@@ -8,7 +8,7 @@ public partial class GameResultDisplay : ContentView
     {
         InitializeComponent();
         Loaded += OnLoaded;
-        GoToState("Default");
+        this.GoToState("Default");
     }
 
     public GamePageViewModel ViewModel => (GamePageViewModel)BindingContext;
@@ -29,9 +29,6 @@ public partial class GameResultDisplay : ContentView
             GameMode.Lost => "Lost",
             _ => "Default"
         };
-        GoToState(stateName);
+        this.GoToState(stateName);
     }
-
-    private void GoToState(string stateName) =>
-        VisualStateManager.GoToState(this, stateName);
 }
