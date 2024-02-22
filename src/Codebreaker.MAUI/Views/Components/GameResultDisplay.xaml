@@ -8,6 +8,28 @@
              x:Name="this"
              x:DataType="{x:Type vm:GamePageViewModel}">
     <Grid>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="Default">
+                    <VisualState.Setters>
+                        <Setter TargetName="WonPanel" Property="IsVisible" Value="False" />
+                        <Setter TargetName="LostPanel" Property="IsVisible" Value="False" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Won">
+                    <VisualState.Setters>
+                        <Setter TargetName="WonPanel" Property="IsVisible" Value="True" />
+                        <Setter TargetName="LostPanel" Property="IsVisible" Value="False" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Lost">
+                    <VisualState.Setters>
+                        <Setter TargetName="WonPanel" Property="IsVisible" Value="False" />
+                        <Setter TargetName="LostPanel" Property="IsVisible" Value="True" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
         <VerticalStackLayout IsVisible="{Binding GameStatus, Mode=OneWay, Converter={converter:GameStatusToIsVisibleConverter}, ConverterParameter=Won}">
             <Image Source="wonanimation_300_opt.gif" IsAnimationPlaying="True" MaximumHeightRequest="300" />
             <Label Text="Congratulations - you won the game 🎉🏆" FontSize="20" HorizontalOptions="Center" Margin="0,50,0,20" />

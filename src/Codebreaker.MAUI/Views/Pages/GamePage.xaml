@@ -14,16 +14,43 @@
     <ContentPage.Resources>
         <conv:GameStatusToIsVisibleConverter x:Key="GameStatusVisibleConverter" />
     </ContentPage.Resources>
-    <Grid RowDefinitions="auto, auto, *" Padding="15">
+
+    <Grid RowDefinitions="auto, auto, *" Padding="15" x:Name="ContentWrapper">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="Start">
+                    <VisualState.Setters>
+                        <Setter TargetName="StartGameArea" Property="IsVisible" Value="True" />
+                        <Setter TargetName="PegSelectionArea" Property="IsVisible" Value="False" />
+                        <Setter TargetName="PegScrollView" Property="IsVisible" Value="False" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Playing">
+                    <VisualState.Setters>
+                        <Setter TargetName="StartGameArea" Property="IsVisible" Value="False" />
+                        <Setter TargetName="PegSelectionArea" Property="IsVisible" Value="True" />
+                        <Setter TargetName="PegScrollView" Property="IsVisible" Value="True" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Finished">
+                    <VisualState.Setters>
+                        <Setter TargetName="StartGameArea" Property="IsVisible" Value="False" />
+                        <Setter TargetName="PegSelectionArea" Property="IsVisible" Value="False" />
+                        <Setter TargetName="PegScrollView" Property="IsVisible" Value="True" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        
         <components:GameResultDisplay Grid.Row="0" />
         
         <FlexLayout
+            x:Name="StartGameArea"
             Grid.Row="1"
             MaximumWidthRequest="1500"
             Wrap="Wrap"
             JustifyContent="Start"
-            AlignItems="End"
-            IsVisible="{Binding GameStatus, Mode=OneWay, Converter={StaticResource GameStatusVisibleConverter}, ConverterParameter=Start}">
+            AlignItems="End">
             <VerticalStackLayout
                 FlexLayout.Basis="500"
                 Padding="5,0"
@@ -41,8 +68,7 @@
                 Margin="0,5,0,0"
                 Padding="5,0"
                 ColumnDefinitions="*, auto"
-                MinimumWidthRequest="250"
-                IsVisible="{Binding GameStatus, Mode=OneWay, Converter={StaticResource GameStatusVisibleConverter}, ConverterParameter=Start}">
+                MinimumWidthRequest="250">
                 <Button
                     Grid.Column="0"
                     Text="Start the game"
@@ -58,16 +84,15 @@
         </FlexLayout>
 
         <components:PegSelectionView
+            x:Name="PegSelectionArea"
             Grid.Row="1"
-            MaximumWidthRequest="700"
-            IsVisible="{Binding GameStatus, Mode=OneWay, Converter={StaticResource GameStatusVisibleConverter}, ConverterParameter=Cancelable}"/>
+            MaximumWidthRequest="700" />
         
-        <ScrollView Grid.Row="2" Padding="0,15,0,15" x:Name="pegScrollView" HorizontalOptions="CenterAndExpand">
+        <ScrollView Grid.Row="2" Padding="0,15,0,15" x:Name="PegScrollView" HorizontalOptions="CenterAndExpand">
             <ListView
                 x:Name="test"
                 HorizontalOptions="FillAndExpand"
                 SelectionMode="None"
-                IsVisible="{Binding GameStatus, Mode=OneWay, Converter={StaticResource GameStatusVisibleConverter}, ConverterParameter=Running}"
                 ItemsSource="{Binding GameMoves, Mode=OneWay}"
                 ItemTemplate="{StaticResource PegsTemplate}"/>
         </ScrollView>
