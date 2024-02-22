@@ -19,7 +19,7 @@ public sealed partial class GamePage : Page, IRecipient<GameMoveMessage>
         WeakReferenceMessenger.Default.Register(this);
         WeakReferenceMessenger.Default.UnregisterAllOnUnloaded(this);
         ViewModel.PropertyChanged += ViewModel_PropertyChanged;
-        VisualStateManager.GoToState(this, "Start", false);
+        this.GoToState("Start", false);
     }
 
     private void ViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -33,7 +33,7 @@ public sealed partial class GamePage : Page, IRecipient<GameMoveMessage>
             GameMode.Won or GameMode.Lost => "Finished",
             _ => "Start",
         };
-        VisualStateManager.GoToState(this, stateName, true);
+        this.GoToState(stateName);
     }
 
     public void Receive(GameMoveMessage message)

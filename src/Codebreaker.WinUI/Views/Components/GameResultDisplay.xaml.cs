@@ -8,7 +8,7 @@ public sealed partial class GameResultDisplay : UserControl
     public GameResultDisplay()
     {
         InitializeComponent();
-        VisualStateManager.GoToState(this, "Default", false);
+        this.GoToState("Default", false);
     }
 
     public GamePageViewModel ViewModel
@@ -37,6 +37,6 @@ public sealed partial class GameResultDisplay : UserControl
             GameMode.Lost => "Lost",
             _ => "Default"
         };
-        VisualStateManager.GoToState(this, stateName, true);
+        this.GoToState(stateName);
     }
 }
