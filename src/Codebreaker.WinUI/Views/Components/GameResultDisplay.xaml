@@ -21,18 +21,42 @@
         </animations:ImplicitAnimationSet>
     </UserControl.Resources>
     <Grid>
-        <StackPanel Orientation="Vertical"
-                    Visibility="{x:Bind ViewModel.GameStatus, Mode=OneWay, Converter={StaticResource GameStatusToVisibilityConverter}, ConverterParameter=Won, FallbackValue=Collapsed}"
-                    animations:Implicit.ShowAnimations="{StaticResource EntranceAnimation}"
-                    animations:Implicit.HideAnimations="{StaticResource ExitAnimation}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="Default">
+                    <VisualState.Setters>
+                        <Setter Target="WonPanel.Visibility" Value="Collapsed" />
+                        <Setter Target="LostPanel.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Won">
+                    <VisualState.Setters>
+                        <Setter Target="WonPanel.Visibility" Value="Visible" />
+                        <Setter Target="LostPanel.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Lost">
+                    <VisualState.Setters>
+                        <Setter Target="WonPanel.Visibility" Value="Collapsed" />
+                        <Setter Target="LostPanel.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <StackPanel 
+            x:Name="WonPanel"
+            Orientation="Vertical"
+            animations:Implicit.ShowAnimations="{StaticResource EntranceAnimation}"
+            animations:Implicit.HideAnimations="{StaticResource ExitAnimation}">
             <Image Source="ms-appx:///Assets/Animations/WonAnimation_300_opt.gif"  MaxHeight="300" />
             <TextBlock Text="{cme:ResourceString Name=GamePage_WonMessage}" FontSize="{ThemeResource TextStyleExtraLargeFontSize}" HorizontalAlignment="Center" Margin="0,50,0,20" />
             <Button Content="{cme:ResourceString Name=GamePage_WonButtonText}" HorizontalAlignment="Center" Margin="0,0,0,50" Command="{x:Bind ViewModel.StartGameCommand, Mode=OneTime}" />
         </StackPanel>
-        <StackPanel Orientation="Vertical"
-                    Visibility="{x:Bind ViewModel.GameStatus, Mode=OneWay, Converter={StaticResource GameStatusToVisibilityConverter}, ConverterParameter=Lost, FallbackValue=Collapsed}"
-                    animations:Implicit.ShowAnimations="{StaticResource EntranceAnimation}"
-                    animations:Implicit.HideAnimations="{StaticResource ExitAnimation}">
+        <StackPanel
+            x:Name="LostPanel"
+            Orientation="Vertical"
+            animations:Implicit.ShowAnimations="{StaticResource EntranceAnimation}"
+            animations:Implicit.HideAnimations="{StaticResource ExitAnimation}">
             <Image Source="ms-appx:///Assets/Animations/LostAnimation_300_opt.gif"  MaxHeight="300" />
             <TextBlock Text="{cme:ResourceString Name=GamePage_LostMessage}" FontSize="{ThemeResource TextStyleExtraLargeFontSize}" HorizontalAlignment="Center" Margin="0,50,0,20" />
             <Button Content="{cme:ResourceString Name=GamePage_LostButtonText}" HorizontalAlignment="Center" Margin="0,0,0,50" Command="{x:Bind ViewModel.StartGameCommand, Mode=OneTime}" />

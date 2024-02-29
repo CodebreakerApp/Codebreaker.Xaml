@@ -22,6 +22,29 @@
     <Grid x:Name="ContentArea">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
+                <VisualState x:Name="Start">
+                    <VisualState.Setters>
+                        <Setter Target="StartGameArea.Visibility" Value="Visible" />
+                        <Setter Target="PegSelectionArea.Visibility" Value="Collapsed" />
+                        <Setter Target="PegScrollViewer.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Playing">
+                    <VisualState.Setters>
+                        <Setter Target="StartGameArea.Visibility" Value="Collapsed" />
+                        <Setter Target="PegSelectionArea.Visibility" Value="Visible" />
+                        <Setter Target="PegScrollViewer.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Finished">
+                    <VisualState.Setters>
+                        <Setter Target="StartGameArea.Visibility" Value="Collapsed" />
+                        <Setter Target="PegSelectionArea.Visibility" Value="Collapsed" />
+                        <Setter Target="PegScrollViewer.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+            <VisualStateGroup x:Name="ResponsiveStates">
                 <VisualState x:Name="WideState">
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="641" />
@@ -32,7 +55,7 @@
                         <Setter Target="NameSubmitButton.(Grid.Column)" Value="1" />
                         <Setter Target="NameSubmitButton.(Grid.RowSpan)" Value="2" />
 
-                        <Setter Target="PegSelection.Margin" Value="80,0,0,0" />
+                        <Setter Target="PegSelectionArea.Margin" Value="80,0,0,0" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="NarrowState">
@@ -45,7 +68,7 @@
                         <Setter Target="NameSubmitButton.(Grid.Row)" Value="1" />
                         <Setter Target="NameSubmitButton.(Grid.ColumnSpan)" Value="2" />
 
-                        <Setter Target="PegSelection.Margin" Value="0" />
+                        <Setter Target="PegSelectionArea.Margin" Value="0" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -60,10 +83,10 @@
             ViewModel="{x:Bind ViewModel, Mode=OneTime}" />
         <!--Startgame section-->
         <Grid
+            x:Name="StartGameArea"
             Grid.Row="0"
             ColumnSpacing="25"
-            RowSpacing="15"
-            Visibility="{x:Bind ViewModel.GameStatus, Mode=OneWay, Converter={StaticResource GameStatusVisibility}, ConverterParameter=Start}">
+            RowSpacing="15">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition Width="Auto" />
@@ -103,12 +126,11 @@
         </Grid>
         <!--Gamebar section-->
         <components:PegSelectionComponent
-            x:Name="PegSelection"
+            x:Name="PegSelectionArea"
             Grid.Row="1"
-            Visibility="{x:Bind ViewModel.GameStatus, Mode=OneWay, Converter={StaticResource GameStatusVisibility}, ConverterParameter=Cancelable}"
             ViewModel="{x:Bind ViewModel, Mode=OneWay}" />
         <!--Move section-->
-        <ScrollViewer Grid.Row="2" Padding="0,0,0,15" x:Name="pegScrollViewer">
+        <ScrollViewer Grid.Row="2" Padding="0,0,0,15" x:Name="PegScrollViewer">
             <ListBox 
                 x:Name="listGameMoves"
                 Background="Transparent"
