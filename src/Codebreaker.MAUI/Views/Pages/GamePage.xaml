@@ -20,23 +20,23 @@
             <VisualStateGroup>
                 <VisualState x:Name="Start">
                     <VisualState.Setters>
-                        <Setter TargetName="StartGameArea" Property="IsVisible" Value="True" />
-                        <Setter TargetName="PegSelectionArea" Property="IsVisible" Value="False" />
-                        <Setter TargetName="PegScrollView" Property="IsVisible" Value="False" />
+                        <Setter TargetName="StartGameArea" Property="FlexLayout.IsVisible" Value="True" />
+                        <Setter TargetName="PegSelectionArea" Property="components:PegSelectionView.IsVisible" Value="False" />
+                        <Setter TargetName="PegScrollView" Property="ScrollView.IsVisible" Value="False" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Playing">
                     <VisualState.Setters>
-                        <Setter TargetName="StartGameArea" Property="IsVisible" Value="False" />
-                        <Setter TargetName="PegSelectionArea" Property="IsVisible" Value="True" />
-                        <Setter TargetName="PegScrollView" Property="IsVisible" Value="True" />
+                        <Setter TargetName="StartGameArea" Property="FlexLayout.IsVisible" Value="False" />
+                        <Setter TargetName="PegSelectionArea" Property="components:PegSelectionView.IsVisible" Value="True" />
+                        <Setter TargetName="PegScrollView" Property="ScrollView.IsVisible" Value="True" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Finished">
                     <VisualState.Setters>
-                        <Setter TargetName="StartGameArea" Property="IsVisible" Value="False" />
-                        <Setter TargetName="PegSelectionArea" Property="IsVisible" Value="False" />
-                        <Setter TargetName="PegScrollView" Property="IsVisible" Value="True" />
+                        <Setter TargetName="StartGameArea" Property="FlexLayout.IsVisible" Value="False" />
+                        <Setter TargetName="PegSelectionArea" Property="components:PegSelectionView.IsVisible" Value="False" />
+                        <Setter TargetName="PegScrollView" Property="ScrollView.IsVisible" Value="True" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -90,7 +90,6 @@
         
         <ScrollView Grid.Row="2" Padding="0,15,0,15" x:Name="PegScrollView" HorizontalOptions="CenterAndExpand">
             <ListView
-                x:Name="test"
                 HorizontalOptions="FillAndExpand"
                 SelectionMode="None"
                 ItemsSource="{Binding GameMoves, Mode=OneWay}"

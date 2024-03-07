@@ -16,28 +16,37 @@ public partial class GamePage : Page, IRecipient<GameMoveMessage>
         InitializeComponent();
         WeakReferenceMessenger.Default.Register(this);
         WeakReferenceMessenger.Default.UnregisterAllOnUnloaded(this);
+        ViewModel.PropertyChanged += ViewModel_PropertyChanged;
+        ContentWrapper.GoToState("Start");
     }
 
-    public GamePageViewModel ViewModel
-    {
-        get => (GamePageViewModel)GetValue(ViewModelProperty);
-        set => SetValue(ViewModelProperty, value);
-    }
-
-    public static readonly DependencyProperty ViewModelProperty =
-        DependencyProperty.Register("ViewModel", typeof(GamePageViewModel), typeof(GamePage), new PropertyMetadata(null));
-
-    private async void Button_Click(object sender, RoutedEventArgs e)
-    {
-        await _navigationService.NavigateToAsync("TestPage");
-    }
+    public GamePageViewModel ViewModel { get; }
 
     public void Receive(GameMoveMessage message)
     {
         if (message.GameMoveValue is not GameMoveValue.Completed)
             return;
 
-        pegScrollViewer.UpdateLayout();
-        pegScrollViewer.ScrollToBottom();
+        PegScrollViewer.UpdateLayout();
+        PegScrollViewer.ScrollToBottom();
+    }
+
+    private void ViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName != nameof(GamePageViewModel.GameStatus))
+            return;
+
+        var stateName = ViewModel.GameStatus switch
+        {
+            GameMode.Started or GameMode.MoveSet => "Playing",
+            GameMode.Won or GameMode.Lost => "Finished",
+            _ => "Start"
+        };
+        ContentWrapper.GoToState(stateName);
+    }
+
+    private async void Button_Click(object sender, RoutedEventArgs e)
+    {
+        await _navigationService.NavigateToAsync("TestPage");
     }
 }
