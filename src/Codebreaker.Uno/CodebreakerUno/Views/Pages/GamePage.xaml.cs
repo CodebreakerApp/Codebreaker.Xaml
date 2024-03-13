@@ -1,8 +1,10 @@
 using Codebreaker.ViewModels;
 using CodeBreaker.Uno.Helpers;
 using CommunityToolkit.Mvvm.Messaging;
+#if WINDOWS10_0_17763_0_OR_GREATER
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Shapes;
+#endif
 
 namespace CodeBreaker.Uno.Views.Pages;
 
@@ -28,6 +30,7 @@ public sealed partial class GamePage : Page, IRecipient<GameMoveMessage>
         if (message.GameMoveValue is not GameMoveValue.Completed)
             return;
 
+#if WINDOWS10_0_17763_0_OR_GREATER
         var selectionAndKeyPegs = message.SelectionAndKeyPegs ?? throw new InvalidOperationException();
         var animationService = ConnectedAnimationService.GetForCurrentView();
         animationService.DefaultDuration = TimeSpan.FromMilliseconds(500);
@@ -44,6 +47,7 @@ public sealed partial class GamePage : Page, IRecipient<GameMoveMessage>
                 animation.Configuration = new BasicConnectedAnimationConfiguration();
                 animation.TryStart(ellipse);
             });
+#endif
 
         // Scroll to bottom
         PegScrollViewer.UpdateLayout();
