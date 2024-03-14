@@ -13,7 +13,9 @@ public sealed partial class ShellPage : Page
         ViewModel.NavigationService.Frame = NavigationFrame;
         ViewModel.NavigationViewService.Initialize(NavigationViewControl);
 
+#if WINDOWS10_0_17763_0_OR_GREATER
         App.Current.MainWindow!.ExtendsContentIntoTitleBar = true;
+#endif
         AppTitleBarText.Text = "AppDisplayName".GetLocalized();
     }
 
