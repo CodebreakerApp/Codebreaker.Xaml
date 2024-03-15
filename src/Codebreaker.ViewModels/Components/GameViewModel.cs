@@ -4,7 +4,7 @@ public class GameViewModel(Game game)
 {
     private readonly Game _game = game;
 
-    public Guid GameId => _game.GameId;
+    public Guid GameId => _game.Id;
 
     public string Name => _game.PlayerName;
 
