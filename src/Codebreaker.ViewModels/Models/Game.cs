@@ -6,7 +6,8 @@ public partial class Game(
     string playerName,
     DateTime startTime,
     int numberCodes,
-    int maxMoves) : ObservableObject
+    int maxMoves,
+    IDictionary<string, string[]> fieldValues) : ObservableObject
 {
     /// <summary>
     /// Gets the unique identifier of the game.
@@ -70,7 +71,7 @@ public partial class Game(
     /// <summary>
     /// A list of possible field values the user has to chose from
     /// </summary>
-    public required IDictionary<string, string[]> FieldValues { get; init; }
+    public IDictionary<string, string[]> FieldValues { get; init; } = fieldValues;
 
     /// <summary>
     /// A list of moves the player made
