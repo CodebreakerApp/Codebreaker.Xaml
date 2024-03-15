@@ -38,7 +38,7 @@ public partial class Game(
     /// Gets the end time of the game or null if it did not end yet. This value is set from a game guess anylzer after the game was ended.
     /// </summary>
     [ObservableProperty]
-    private string? _endTime;
+    [NotifyPropertyChangedFor(nameof(IsFinished))]
     private DateTime? _endTime;
 
     /// <summary>
@@ -56,6 +56,11 @@ public partial class Game(
     /// Gets the maximum number of moves the game ends when its not solved.
     /// </summary>
     public int MaxMoves { get; private set; } = maxMoves;
+
+    /// <summary>
+    /// Gets a boolean value indicating if the game is finished.
+    /// </summary>
+    public bool IsFinished => EndTime is not null;
 
     /// <summary>
     /// Did the player win the game?
