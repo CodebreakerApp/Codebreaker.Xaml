@@ -39,6 +39,7 @@ public partial class Game(
     /// </summary>
     [ObservableProperty]
     private string? _endTime;
+    private DateTime? _endTime;
 
     /// <summary>
     /// Gets the duration of the game or null if it did not end yet
