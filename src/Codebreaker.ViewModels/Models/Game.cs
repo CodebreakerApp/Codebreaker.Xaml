@@ -1,7 +1,7 @@
 ﻿namespace Codebreaker.ViewModels.Models;
 
 public partial class Game(
-    Guid gameId,
+    Guid id,
     GameType gameType,
     string playerName,
     DateTime startTime,
@@ -11,7 +11,7 @@ public partial class Game(
     /// <summary>
     /// Gets the unique identifier of the game.
     /// </summary>
-    public Guid GameId { get; private set; } = gameId;
+    public Guid Id { get; private set; } = id;
 
     /// <summary>
     /// Gets the type of the game. <see cref="GameType"/>
