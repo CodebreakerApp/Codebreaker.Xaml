@@ -47,12 +47,6 @@ public partial class Game(
     private TimeSpan? _duration;
 
     /// <summary>
-    /// Gets the last move number. This number is set from an game move analyer after the move was set.
-    /// </summary>  
-    [ObservableProperty]
-    private int _lastMoveNumber;
-
-    /// <summary>
     /// Gets the number of codes the player needs to fill.
     /// </summary>  
     public int NumberCodes { get; private set; } = numberCodes;
