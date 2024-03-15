@@ -76,7 +76,5 @@ public partial class Game(
     /// <summary>
     /// A list of moves the player made
     /// </summary>
-    public ICollection<Move> Moves { get; } = new ObservableCollection<Move>();
-
-    public override string ToString() => $"{GameId}:{GameType} - {StartTime}";
+    public ObservableCollection<Move> Moves { get; } = [];
 }
