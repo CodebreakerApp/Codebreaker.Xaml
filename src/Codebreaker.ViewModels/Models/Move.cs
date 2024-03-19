@@ -1,6 +1,6 @@
 ﻿namespace Codebreaker.ViewModels.Models;
 
-public partial class Move(ICollection<string> guessPegs, ICollection<string>? keyPegs = null) : ObservableObject
+public class Move(ICollection<string> guessPegs, ICollection<string>? keyPegs = null)
 {
     /// <summary>
     /// The guess pegs from the user for this move.
