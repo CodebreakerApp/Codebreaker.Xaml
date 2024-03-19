@@ -27,11 +27,11 @@ public partial class GamePageViewModel(IGamesClient gamesClient, IInfoBarService
     {
         IsLoading = true;
         var usedGameMode = GameType.Game6x4;
-        (Guid id, int numberCode, int maxMoves, IDictionary<string, string[]> fieldValues) response;
         
         try
         {
-            response = await gamesClient.StartGameAsync(usedGameMode, Username);
+            var response = await gamesClient.StartGameAsync(usedGameMode, Username);
+            Game = new Game(response.Id, usedGameMode, Username, DateTime.Now, response.NumberCodes, response.MaxMoves, response.FieldValues);
         }
         catch (InvalidOperationException)
         {
@@ -52,8 +52,6 @@ public partial class GamePageViewModel(IGamesClient gamesClient, IInfoBarService
         {
             IsLoading = false;
         }
-
-        Game = new Game(response.id, usedGameMode, Username, DateTime.Now, response.numberCode, response.maxMoves, response.fieldValues);
 
         WeakReferenceMessenger.Default.Send(new GameStartedMessage(Game));
 
@@ -86,10 +84,20 @@ public partial class GamePageViewModel(IGamesClient gamesClient, IInfoBarService
         WeakReferenceMessenger.Default.Send(new MakeMoveMessage(new(selectedColors!)));
 
         IsLoading = true;
-        (string[] keyPegs, bool hasEnded, bool isVictory) response;
         try
         {
-            response = await gamesClient.SetMoveAsync(Game.Id, Game.PlayerName, GameType.Game6x4, Game.Moves.Count + 1, selectedColors!);
+            var response = await gamesClient.SetMoveAsync(Game.Id, Game.PlayerName, GameType.Game6x4, Game.Moves.Count + 1, selectedColors!);
+
+            var newMove = new Move(selectedColors!, response.Results);
+            Game.Moves.Add(newMove);
+            WeakReferenceMessenger.Default.Send(new MakeMoveMessage(newMove));
+
+            if (response.Ended)
+            {
+                Game.EndTime = DateTime.Now;
+                Game.IsVictory = response.IsVictory;
+                WeakReferenceMessenger.Default.Send(new GameEndedMessage(Game));
+            }
         }
         catch (InvalidOperationException)
         {
@@ -109,17 +117,6 @@ public partial class GamePageViewModel(IGamesClient gamesClient, IInfoBarService
         finally
         {
             IsLoading = false;
-        }
-
-        var newMove = new Move(selectedColors!, response.keyPegs);
-        Game.Moves.Add(newMove);
-        WeakReferenceMessenger.Default.Send(new MakeMoveMessage(newMove));
-
-        if (response.hasEnded)
-        {
-            Game.EndTime = DateTime.Now;
-            Game.IsVictory = response.isVictory;
-            WeakReferenceMessenger.Default.Send(new GameEndedMessage(Game));
         }
     }
 }
