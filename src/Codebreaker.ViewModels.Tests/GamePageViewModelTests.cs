@@ -24,13 +24,15 @@ public class GamePageViewModelTests
     }
     
     [Fact]
-    public async Task TestGameModeStartedAfterStart()
+    public async Task TestGameStart()
     {
         var viewModel = new GamePageViewModel(_gamesClientMock.Object, _infoBarServiceMock.Object);
-        viewModel.Name = "Test";
+        viewModel.Username = "Test";
         await viewModel.StartGameCommand.ExecuteAsync(null);
 
-        Assert.Equal(GameMode.Started, _viewModel.GameStatus);
+        Assert.Equal(4, viewModel.SelectedFields.Length);
+        Assert.All(viewModel.SelectedFields, field => Assert.NotNull(field));
+        Assert.NotNull(viewModel.Game);
     }
 
     [Fact]
