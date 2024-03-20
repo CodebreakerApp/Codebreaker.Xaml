@@ -6,19 +6,39 @@ namespace CodeBreaker.ViewModels.Tests;
 
 public class GamePageViewModelTests
 {
+    private static readonly string[] s_code = ["Green", "Blue", "Yellow", "Orange"];
+    private static readonly (string[] GuessPegs, string[] KeyPegs, bool HasEnded, bool IsVictory)[] s_moves = [
+        (["Red", "Red", "Red", "Red"], [], false, false),
+        (["Green", "Green", "Green", "Green"], ["Black"], false, false),
+        (["Blue", "Green", "Green", "Green"], ["White", "White"], false, false),
+        (["Green", "Blue", "Blue", "Blue"], ["Black", "Black"], false, false),
+        (["Green", "Blue", "Yellow", "Yellow"], ["Black", "Black", "Black"], false, false),
+        (["Green", "Blue", "Yellow", "Purple"], ["Black", "Black", "Black"], false, false),
+        (["Green", "Blue", "Yellow", "Orange"], ["Black", "Black", "Black", "Black"], true, true),
+    ];
+
     private readonly Mock<IGamesClient> _gamesClientMock;
     private readonly Mock<IInfoBarService> _infoBarServiceMock;
 
     public GamePageViewModelTests()
     {
-        (Guid GameType, int NumberCodes, int MaxMoves, IDictionary<string, string[]> FieldValues) returnValue = 
+        (Guid Id, int NumberCodes, int MaxMoves, IDictionary<string, string[]> FieldValues) gameReturnValue = 
             (Guid.NewGuid(), 4, 12, new Dictionary<string, string[]>()
             {
                 { "colors", ["Black", "White", "Red", "Green", "Blue", "Yellow"] }
             });
 
         _gamesClientMock = new();
-        _gamesClientMock.Setup(client => client.StartGameAsync(GameType.Game6x4, "Test", CancellationToken.None)).ReturnsAsync(returnValue);
+        // Setup the StartGameAsync method of the GamesClient.
+        _gamesClientMock.Setup(client => client.StartGameAsync(GameType.Game6x4, "Test", CancellationToken.None)).ReturnsAsync(gameReturnValue);
+
+        // Setup the SetMoveAsync method of the GamesClient.
+        for (int i = 0; i < s_moves.Length; i++)
+        {
+            var move = s_moves[i];
+            _gamesClientMock.Setup(client => client.SetMoveAsync(gameReturnValue.Id, "Test", GameType.Game6x4, i + 1, move.GuessPegs, CancellationToken.None))
+                .ReturnsAsync((move.KeyPegs, move.HasEnded, move.IsVictory));
+        }
 
         _infoBarServiceMock = new();
     }
