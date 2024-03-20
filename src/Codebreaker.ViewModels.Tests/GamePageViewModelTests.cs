@@ -14,7 +14,7 @@ public class GamePageViewModelTests
         (Guid GameType, int NumberCodes, int MaxMoves, IDictionary<string, string[]> FieldValues) returnValue = 
             (Guid.NewGuid(), 4, 12, new Dictionary<string, string[]>()
             {
-                { "colors", new string[] { "Black", "White", "Red", "Green", "Blue", "Yellow" } }
+                { "colors", ["Black", "White", "Red", "Green", "Blue", "Yellow"] }
             });
 
         _gamesClientMock = new();
