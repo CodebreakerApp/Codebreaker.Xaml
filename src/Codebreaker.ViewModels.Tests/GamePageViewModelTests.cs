@@ -17,16 +17,11 @@ public class GamePageViewModelTests
             });
 
         Mock<IGamesClient> gameClient = new();
-        gameClient.Setup(
-            client => client.StartGameAsync(GameType.Game6x4, "Test", CancellationToken.None)).ReturnsAsync(returnValue);
+        gameClient.Setup(client => client.StartGameAsync(GameType.Game6x4, "Test", CancellationToken.None)).ReturnsAsync(returnValue);
 
-        Mock<IOptions<GamePageViewModelOptions>> options = new();
-        options.Setup(o => o.Value).Returns(new GamePageViewModelOptions());
-
-        Mock<IDialogService> dialogService = new();
         Mock<IInfoBarService> infoBarService = new();
 
-        _viewModel = new GamePageViewModel(gameClient.Object, options.Object, dialogService.Object, infoBarService.Object);
+        _viewModel = new GamePageViewModel(gameClient.Object, infoBarService.Object);
     }
     
     [Fact]
