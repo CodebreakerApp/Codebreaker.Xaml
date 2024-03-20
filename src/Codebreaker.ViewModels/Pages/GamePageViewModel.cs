@@ -1,272 +1,122 @@
-﻿using Codebreaker.ViewModels.Components;
-using Codebreaker.ViewModels.Contracts.Services;
-using Microsoft.Extensions.Options;
+﻿using Codebreaker.ViewModels.Contracts.Services;
+using Codebreaker.ViewModels.Messages;
+using System.ComponentModel;
+using System.Net;
 
 namespace Codebreaker.ViewModels;
 
-public enum GameMode
+public partial class GamePageViewModel(IGamesClient gamesClient, IInfoBarService infoBarService) : ObservableRecipient
 {
-    NotRunning,
-    Started,
-    MoveSet,
-    Lost,
-    Won
-}
+    [ObservableProperty]
+    private bool _isLoading;
 
-public enum GameMoveValue
-{
-    Started,
-    Completed
-}
-
-/// <summary>
-/// Configure to enable dialogs (via <see cref="IDialogService"/>), or use the <see cref="InfoBarService"/>.
-/// </summary>
-public class GamePageViewModelOptions
-{
-}
-
-public partial class GamePageViewModel : ObservableObject
-{
-    private readonly IGamesClient _client;
-    private int _moveNumber = 0;
-
-    private readonly IDialogService _dialogService;
-    private readonly IInfoBarService _infoBarService;
-
-    public GamePageViewModel(
-        IGamesClient client,
-        IOptions<GamePageViewModelOptions> options,
-        IDialogService dialogService,
-        IInfoBarService infoBarService
-    )
-    {
-        _client = client;
-        _dialogService = dialogService;
-        _infoBarService = infoBarService;
-
-        PropertyChanged += (sender, e) =>
-        {
-            if (e.PropertyName == nameof(GameStatus))
-                WeakReferenceMessenger.Default.Send(new GameStateChangedMessage(GameStatus));
-        };
-    }
-
+    [ObservableProperty]
     private Game? _game;
-    /// <summary>
-    /// <see cref="Models.Game"/> instance."/>
-    /// </summary>
-    public Game? Game
+
+    [ObservableProperty]
+    private Field[] _selectedFields = [];
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(StartGameCommand))]
+    private string _username = string.Empty;
+
+    private bool CanStartGame() => Username is not null && Username.Length > 2;
+
+    [RelayCommand(CanExecute = nameof(CanStartGame))]
+    private async Task StartGameAsync(CancellationToken cancellationToken)
     {
-        get => _game;
-        set
-        {
-            OnPropertyChanging(nameof(Game));
-            OnPropertyChanging(nameof(Fields));
-            _game = value;
-
-            Fields.Clear();
-
-            for (int i = 0; i < _game?.NumberCodes; i++)
-            {
-                SelectedFieldViewModel field = new();
-                field.PropertyChanged += (sender, e) => SetMoveCommand.NotifyCanExecuteChanged();
-                Fields.Add(field);
-            }
-
-            OnPropertyChanged(nameof(Game));
-            OnPropertyChanged(nameof(Fields));
-        }
-    }
-
-    [ObservableProperty]
-    private string _name = string.Empty;
-
-    [NotifyPropertyChangedFor(nameof(IsNameEnterable))]
-    [ObservableProperty]
-    private bool _isNamePredefined = false;
-
-    public ObservableCollection<SelectedFieldViewModel> Fields { get; } = [];
-
-    public ObservableCollection<SelectionAndKeyPegs> GameMoves { get; } = [];
-
-    /// <summary>
-    /// Status of the game. See <see cref="GameMode"/>.
-    /// </summary>
-    [ObservableProperty]
-    private GameMode _gameStatus = GameMode.NotRunning;
-
-    /// <summary>
-    /// An API call to the games-API is in-progress. Use to display progress indicators.
-    /// </summary>
-    [NotifyPropertyChangedFor(nameof(IsNameEnterable))]
-    [ObservableProperty]
-    private bool _inProgress = false;
-
-    [ObservableProperty]
-    private bool _isCancelling = false;
-
-    /// <summary>
-    /// The player name can be entered.
-    /// </summary>
-    public bool IsNameEnterable => !InProgress && !IsNamePredefined;
-
-    /// <summary>
-    /// Starts a new game using <see cref="IGamesClient"/>.
-    /// Updates the <see cref="GameStatus"/> property.
-    /// Initializes <see cref="Game"/>).
-    /// Increments the move number.
-    /// Shows <see cref="IDialogService"/> messages or <see cref="_infoBarService"/> messages with errors.
-    /// </summary>
-    /// <returns>A task</returns>
-    [RelayCommand(AllowConcurrentExecutions = false, FlowExceptionsToTaskScheduler = true)]
-    private async Task StartGameAsync()
-    {
+        IsLoading = true;
+        var usedGameMode = GameType.Game6x4;
+        
         try
         {
-            InitializeValues();
-
-            InProgress = true;
-            (Guid gameId, int numberCodes, int maxMoves, IDictionary<string, string[]> fieldValues) = await _client.StartGameAsync(GameType.Game6x4, Name);
-
-            GameStatus = GameMode.Started;
-
-            Game = new Game(gameId, GameType.Game6x4, Name, DateTime.Now, numberCodes, maxMoves)
-            {
-                FieldValues = fieldValues
-            };
-            _moveNumber++;
+            var response = await gamesClient.StartGameAsync(usedGameMode, Username);
+            Game = new Game(response.Id, usedGameMode, Username, DateTime.Now, response.NumberCodes, response.MaxMoves, response.FieldValues);
         }
-        catch (Exception ex)
+        catch (InvalidOperationException)
         {
-            _infoBarService.New
-                .IsErrorMessage()
-                .WithMessage(ex.Message)
-                .WithAction((message) =>
-                {
-                    GameStatus = GameMode.NotRunning;
-                    message.Close();
-                })
-                .Show();
+            infoBarService.New.WithMessage("Invalid operation").Show();
+            return;
+        }
+        catch(HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.BadRequest)
+        {
+            infoBarService.New.WithMessage(ex.Message).Show();
+            return;
+        }
+        catch (HttpRequestException)
+        {
+            infoBarService.New.WithMessage("Networking issues").Show();
+            return;
         }
         finally
         {
-            InProgress = false;
+            IsLoading = false;
         }
+
+        WeakReferenceMessenger.Default.Send(new GameStartedMessage(Game));
+
+        // Initialize SelectedFields
+        SelectedFields = Enumerable.Range(0, Game.NumberCodes)
+            .Select(i =>
+            {
+                var field = new Field(Game.FieldValues["colors"]);   // TODO: Hardcoding "colors" is not suitable for all game types
+                field.PropertyChanged += (object? sender, PropertyChangedEventArgs args) => MakeMoveCommand.NotifyCanExecuteChanged();
+                return field;
+            })
+            .ToArray();
     }
 
-    // TODO: end of the game is not yet implemented (in the client library)
-//    [RelayCommand(AllowConcurrentExecutions = false, FlowExceptionsToTaskScheduler = true)]
-//    private async Task CancelGameAsync()
-//    {
-//        if (Game is null)
-//            throw new InvalidOperationException("No game running");
+    private bool CanMakeMove() => SelectedFields.All(field => field is not null);
 
-//        IsCancelling = true;
-
-//        try
-//        {
-////            await _client.CancelGameAsync(Game!.Value.GameId);
-//            GameStatus = GameMode.NotRunning;
-//        }
-//        catch (Exception ex)
-//        {
-//            InfoBarMessageService.ShowError(ex.Message);
-
-//            if (_enableDialogs)
-//                await _dialogService.ShowMessageAsync(ex.Message);
-//        }
-//        finally
-//        {
-//            IsCancelling = false;
-//        }
-//    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns>A task</returns>
-    /// <exception cref="InvalidOperationException"></exception>
-    [RelayCommand(CanExecute = nameof(CanSetMove), AllowConcurrentExecutions = false, FlowExceptionsToTaskScheduler = true)]
-    private async Task SetMoveAsync()
+    [RelayCommand(CanExecute = nameof(CanMakeMove))]
+    private async Task MakeMoveAsync(CancellationToken cancellationToken)
     {
+        if (Game is null)
+            throw new InvalidOperationException("A game needs to be started before making a move");
+
+        var selectedColors = SelectedFields
+            .Select(x => x.Color)
+            .ToArray();
+
+        if (selectedColors.Any(color => color is null))
+            throw new InvalidOperationException("All colors need to be selected before making a move");
+
+        WeakReferenceMessenger.Default.Send(new MakeMoveMessage(new(selectedColors!)));
+
+        IsLoading = true;
         try
         {
-            InProgress = true;
-            WeakReferenceMessenger.Default.Send(new GameMoveMessage(GameMoveValue.Started));
+            var response = await gamesClient.SetMoveAsync(Game.Id, Game.PlayerName, GameType.Game6x4, Game.Moves.Count + 1, selectedColors!);
 
-            if (_game is null)
-                throw new InvalidOperationException("no game running");
+            var newMove = new Move(selectedColors!, response.Results);
+            Game.Moves.Add(newMove);
+            WeakReferenceMessenger.Default.Send(new MakeMoveMessage(newMove));
 
-            if (Fields.Count != _game.NumberCodes || Fields.Any(x => !x.IsSet))
-                throw new InvalidOperationException("all colors need to be selected before invoking this method");
-
-            string[] guessPegs = Fields.Select(x => x.Value!).ToArray();
-
-            (string[] keyPegs, bool ended, bool isVictory) = await _client.SetMoveAsync(_game.GameId,  Name, GameType.Game6x4,  _moveNumber, guessPegs);
-
-            SelectionAndKeyPegs selectionAndKeyPegs = new(guessPegs, keyPegs, _moveNumber++);
-            GameMoves.Add(selectionAndKeyPegs);
-            GameStatus = GameMode.MoveSet;
-
-            WeakReferenceMessenger.Default.Send(new GameMoveMessage(GameMoveValue.Completed, selectionAndKeyPegs));
-
-            if (isVictory)
+            if (response.Ended)
             {
-                GameStatus = GameMode.Won;
-                _infoBarService.New.IsSuccessMessage().WithMessage("Congratulations - you won!").Show();
-            }
-            else if (ended)
-            {
-                GameStatus = GameMode.Lost;
-                _infoBarService.New.WithMessage("Sorry, you didn't find the matching colors!").Show();
+                Game.EndTime = DateTime.Now;
+                Game.IsVictory = response.IsVictory;
+                WeakReferenceMessenger.Default.Send(new GameEndedMessage(Game));
             }
         }
-        catch (Exception ex)
+        catch (InvalidOperationException)
         {
-            _infoBarService.New.WithMessage(ex.Message).IsErrorMessage().Show();
+            infoBarService.New.WithMessage("Invalid operation").Show();
+            return;
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.BadRequest)
+        {
+            infoBarService.New.WithMessage(ex.Message).Show();
+            return;
+        }
+        catch (HttpRequestException)
+        {
+            infoBarService.New.WithMessage("Networking issues").Show();
+            return;
         }
         finally
         {
-            ClearSelectedColor();
-            InProgress = false;
+            IsLoading = false;
         }
-    }
-
-    private bool CanSetMove =>
-        Fields.All(s => s is not null && s.IsSet);
-
-    private void ClearSelectedColor()
-    {
-        for (int i = 0; i < Fields.Count; i++)
-            Fields[i].Reset();
-
-        SetMoveCommand.NotifyCanExecuteChanged();
-    }
-
-    private void InitializeValues()
-    {
-        ClearSelectedColor();
-        GameMoves.Clear();
-        GameStatus = GameMode.NotRunning;
-        _infoBarService.Clear();
-        _moveNumber = 0;
     }
 }
-
-/// <summary>
-/// 
-/// </summary>
-/// <param name="GuessPegs">String representation of guesses</param>
-/// <param name="KeyPegs">String representation of results</param>
-/// <param name="MoveNumber">The move number</param>
-public record SelectionAndKeyPegs(string[] GuessPegs, string[] KeyPegs, int MoveNumber);
-
-public record class GameStateChangedMessage(GameMode GameMode);
-
-/// <summary>
-/// Messages sent when the games starts, or a move is set.
-/// </summary>
-/// <param name="GameMoveValue"><see cref="GameMoveValue"/></param>
-/// <param name="SelectionAndKeyPegs"><see cref="SelectionAndKeyPegs"/></param>
-public record class GameMoveMessage(GameMoveValue GameMoveValue, SelectionAndKeyPegs? SelectionAndKeyPegs = null);

@@ -1,17 +1,18 @@
 ﻿namespace Codebreaker.ViewModels.Models;
 
 public partial class Game(
-    Guid gameId,
+    Guid id,
     GameType gameType,
     string playerName,
     DateTime startTime,
     int numberCodes,
-    int maxMoves) : ObservableObject
+    int maxMoves,
+    IDictionary<string, string[]> fieldValues) : ObservableObject
 {
     /// <summary>
     /// Gets the unique identifier of the game.
     /// </summary>
-    public Guid GameId { get; private set; } = gameId;
+    public Guid Id { get; private set; } = id;
 
     /// <summary>
     /// Gets the type of the game. <see cref="GameType"/>
@@ -37,19 +38,14 @@ public partial class Game(
     /// Gets the end time of the game or null if it did not end yet. This value is set from a game guess anylzer after the game was ended.
     /// </summary>
     [ObservableProperty]
-    private string? _endTime;
+    [NotifyPropertyChangedFor(nameof(IsFinished))]
+    private DateTime? _endTime;
 
     /// <summary>
     /// Gets the duration of the game or null if it did not end yet
     /// </summary>
     [ObservableProperty]
     private TimeSpan? _duration;
-
-    /// <summary>
-    /// Gets the last move number. This number is set from an game move analyer after the move was set.
-    /// </summary>  
-    [ObservableProperty]
-    private int _lastMoveNumber;
 
     /// <summary>
     /// Gets the number of codes the player needs to fill.
@@ -62,6 +58,11 @@ public partial class Game(
     public int MaxMoves { get; private set; } = maxMoves;
 
     /// <summary>
+    /// Gets a boolean value indicating if the game is finished.
+    /// </summary>
+    public bool IsFinished => EndTime is not null;
+
+    /// <summary>
     /// Did the player win the game?
     /// </summary>  
     [ObservableProperty]
@@ -70,12 +71,10 @@ public partial class Game(
     /// <summary>
     /// A list of possible field values the user has to chose from
     /// </summary>
-    public required IDictionary<string, string[]> FieldValues { get; init; }
+    public IDictionary<string, string[]> FieldValues { get; init; } = fieldValues;
 
     /// <summary>
     /// A list of moves the player made
     /// </summary>
-    public ICollection<Move> Moves { get; } = new ObservableCollection<Move>();
-
-    public override string ToString() => $"{GameId}:{GameType} - {StartTime}";
+    public ObservableCollection<Move> Moves { get; } = [];
 }
