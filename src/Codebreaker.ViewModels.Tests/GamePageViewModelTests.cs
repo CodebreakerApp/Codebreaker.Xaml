@@ -36,23 +36,21 @@ public class GamePageViewModelTests
     }
 
     [Fact]
-    public async Task TestInProgressNotificationAfterStart()
+    public async Task TestIsLoadingNotificationAfterStart()
     {
         var viewModel = new GamePageViewModel(_gamesClientMock.Object, _infoBarServiceMock.Object);
-        List<bool> expected = new() { true, false };
-        viewModel.Name = "Test";
-        List<bool> inProgressValues = new();
+        List<bool> expectedIsLoadingValues = [true, false];
+        List<bool> actualInProgressValues = [];
+        viewModel.Username = "Test";
 
         viewModel.PropertyChanged += (sender, e) =>
         {
-            if (e.PropertyName is "InProgress")
-            {
-                inProgressValues.Add(_viewModel.InProgress);
-            }
+            if (e.PropertyName is nameof(GamePageViewModel.IsLoading))
+                actualInProgressValues.Add(viewModel.IsLoading);
         };
         
         await viewModel.StartGameCommand.ExecuteAsync(null);
 
-        Assert.Equal(expected, inProgressValues);
+        Assert.Equal(expectedIsLoadingValues, actualInProgressValues);
     }
 }
