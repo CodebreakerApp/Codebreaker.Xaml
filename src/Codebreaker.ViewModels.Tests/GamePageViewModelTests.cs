@@ -6,7 +6,8 @@ namespace CodeBreaker.ViewModels.Tests;
 
 public class GamePageViewModelTests
 {
-    private readonly GamePageViewModel _viewModel;
+    private readonly Mock<IGamesClient> _gamesClientMock;
+    private readonly Mock<IInfoBarService> _infoBarServiceMock;
 
     public GamePageViewModelTests()
     {
@@ -16,19 +17,18 @@ public class GamePageViewModelTests
                 { "colors", new string[] { "Black", "White", "Red", "Green", "Blue", "Yellow" } }
             });
 
-        Mock<IGamesClient> gameClient = new();
-        gameClient.Setup(client => client.StartGameAsync(GameType.Game6x4, "Test", CancellationToken.None)).ReturnsAsync(returnValue);
+        _gamesClientMock = new();
+        _gamesClientMock.Setup(client => client.StartGameAsync(GameType.Game6x4, "Test", CancellationToken.None)).ReturnsAsync(returnValue);
 
-        Mock<IInfoBarService> infoBarService = new();
-
-        _viewModel = new GamePageViewModel(gameClient.Object, infoBarService.Object);
+        _infoBarServiceMock = new();
     }
     
     [Fact]
     public async Task TestGameModeStartedAfterStart()
     {
-        _viewModel.Name = "Test";
-        await _viewModel.StartGameCommand.ExecuteAsync(null);
+        var viewModel = new GamePageViewModel(_gamesClientMock.Object, _infoBarServiceMock.Object);
+        viewModel.Name = "Test";
+        await viewModel.StartGameCommand.ExecuteAsync(null);
 
         Assert.Equal(GameMode.Started, _viewModel.GameStatus);
     }
@@ -36,11 +36,12 @@ public class GamePageViewModelTests
     [Fact]
     public async Task TestInProgressNotificationAfterStart()
     {
+        var viewModel = new GamePageViewModel(_gamesClientMock.Object, _infoBarServiceMock.Object);
         List<bool> expected = new() { true, false };
-        _viewModel.Name = "Test";
+        viewModel.Name = "Test";
         List<bool> inProgressValues = new();
 
-        _viewModel.PropertyChanged += (sender, e) =>
+        viewModel.PropertyChanged += (sender, e) =>
         {
             if (e.PropertyName is "InProgress")
             {
@@ -48,7 +49,7 @@ public class GamePageViewModelTests
             }
         };
         
-        await _viewModel.StartGameCommand.ExecuteAsync(null);
+        await viewModel.StartGameCommand.ExecuteAsync(null);
 
         Assert.Equal(expected, inProgressValues);
     }
