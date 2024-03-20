@@ -15,6 +15,7 @@ public sealed partial class ShellPage : Page
 
 #if WINDOWS10_0_17763_0_OR_GREATER
         App.Current.MainWindow!.ExtendsContentIntoTitleBar = true;
+        App.Current.MainWindow.SetTitleBar(AppTitleBar);
 #endif
         AppTitleBarText.Text = "AppDisplayName".GetLocalized();
     }
