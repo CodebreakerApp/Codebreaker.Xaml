@@ -73,4 +73,27 @@ public class GamePageViewModelTests
 
         Assert.Equal(expectedIsLoadingValues, actualInProgressValues);
     }
+
+    [Fact]
+    public async Task TestMoves()
+    {
+        // Start game
+        var viewModel = new GamePageViewModel(_gamesClientMock.Object, _infoBarServiceMock.Object);
+        viewModel.Username = "Test";
+
+        await viewModel.StartGameCommand.ExecuteAsync(null);
+
+        // Play game
+        foreach ((string[] guessPegs, _, _, _) in s_moves)
+        {
+            for (int i = 0; i < guessPegs.Length; i++)
+                viewModel.SelectedFields[i].Color = guessPegs[i];
+
+            await viewModel.MakeMoveCommand.ExecuteAsync(null);
+        }
+
+        Assert.Equal(s_moves.Length, viewModel.Game?.Moves.Count);
+        Assert.NotNull(viewModel.Game?.EndTime);
+        Assert.True(viewModel.Game?.IsVictory);
+    }
 }
