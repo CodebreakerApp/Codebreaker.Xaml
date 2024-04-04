@@ -27,7 +27,7 @@
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
-	<PackageReference Include="CNinnovation.Codebreaker.GamesClient" Version="3.6.0-beta.21" />
+	<PackageReference Include="CNinnovation.Codebreaker.GamesClient" Version="3.6.0-beta.24" />
   </ItemGroup>
 
   <ItemGroup>
