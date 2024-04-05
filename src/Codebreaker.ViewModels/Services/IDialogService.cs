@@ -1,6 +1,6 @@
 ﻿namespace Codebreaker.ViewModels.Services;
 
-[Obsolete]
+[Obsolete("Use IInfoBarService instead.")]
 public interface IDialogService
 {
     Task ShowMessageAsync(string message);
