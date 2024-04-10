@@ -119,4 +119,31 @@ public partial class GamePageViewModel(IGamesClient gamesClient, IInfoBarService
             IsLoading = false;
         }
     }
+
+    private bool CanCancelGame() => Game is not null && !Game.IsFinished;
+
+    [RelayCommand(CanExecute = nameof(CanCancelGame))]
+    private async Task CancelGameAsync(CancellationToken cancellationToken)
+    {
+        if (Game is null)
+            throw new InvalidOperationException("Cannot cancel a not-started game.");
+
+        try
+        {
+            await gamesClient.CancelGameAsync(Game.Id, Game.PlayerName, Game.GameType, cancellationToken);
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.BadRequest)
+        {
+            infoBarService.New.WithMessage("Could not cancel the game").Show();
+            return;
+        }
+        catch (HttpRequestException)
+        {
+            infoBarService.New.WithMessage("Networking issues").Show();
+            return;
+        }
+
+        Game = null;
+        WeakReferenceMessenger.Default.Send(new GameCancelledMessage());
+    }
 }
