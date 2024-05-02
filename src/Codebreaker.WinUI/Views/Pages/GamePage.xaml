@@ -65,17 +65,10 @@
                 <!-- The extra grid and the empy (enabled) TextBlock are necessary for showing the tooltip over the (disabled) TextBox. -->
                 <TextBlock />
                 <TextBox
-                    IsEnabled="{x:Bind ViewModel.IsNameEnterable, Mode=OneWay}"
                     Header="{cme:ResourceString Name=GamePage_NameInputHeader}"
                     PlaceholderText="{cme:ResourceString Name=GamePage_NameInputPlaceholder}"
                     VerticalAlignment="Center"
-                    Text="{x:Bind ViewModel.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <ToolTipService.ToolTip>
-                    <ToolTip
-                    Content="{cme:ResourceString Name=GamePage_NameAlreadyProvidedTooltip}"
-                    IsEnabled="{x:Bind Path=ViewModel.IsNamePredefined, Mode=OneWay}"
-                    Placement="Bottom" />
-                </ToolTipService.ToolTip>
+                    Text="{x:Bind ViewModel.Username, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </Grid>
             <Button
                 Grid.Column="1"
@@ -124,7 +117,7 @@
                 Background="Transparent"
                 SelectedIndex="-1"
                 IsHitTestVisible="False"
-                ItemsSource="{x:Bind ViewModel.GameMoves, Mode=OneWay}"
+                ItemsSource="{x:Bind ViewModel.Game.Moves, Mode=OneWay}"
                 ItemTemplate="{StaticResource PegsTemplate}" />
         </ScrollViewer>
     </Grid>

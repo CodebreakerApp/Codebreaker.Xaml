@@ -1,4 +1,5 @@
 using Codebreaker.ViewModels;
+using Codebreaker.ViewModels.Messages;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Shapes;
@@ -8,44 +9,45 @@ namespace CodeBreaker.WinUI.Views.Pages;
 /// <summary>
 /// An empty page that can be used on its own or navigated to within a Frame.
 /// </summary>
-public sealed partial class GamePage : Page, IRecipient<GameMoveMessage>
+public sealed partial class GamePage : Page,
+    IRecipient<MakeMoveMessage>,
+    IRecipient<GameStartedMessage>,
+    IRecipient<GameEndedMessage>,
+    IRecipient<GameCancelledMessage>
 {
     public GamePageViewModel ViewModel { get; }
 
     public GamePage()
     {
         ViewModel = App.GetService<GamePageViewModel>();
-        InitializeComponent();
-        WeakReferenceMessenger.Default.Register(this);
+        WeakReferenceMessenger.Default.RegisterAll(this);
         WeakReferenceMessenger.Default.UnregisterAllOnUnloaded(this);
-        ViewModel.PropertyChanged += ViewModel_PropertyChanged;
+        InitializeComponent();
         this.GoToState("Start", false);
     }
 
-    private void ViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName != nameof(GamePageViewModel.GameStatus))
-            return;
+    public void Receive(GameStartedMessage message) =>
+        this.GoToState("Playing");
 
-        var stateName = ViewModel.GameStatus switch
-        {
-            GameMode.Started or GameMode.MoveSet => "Playing",
-            GameMode.Won or GameMode.Lost => "Finished",
-            _ => "Start",
-        };
-        this.GoToState(stateName);
+    public async void Receive(GameEndedMessage message)
+    {
+        this.GoToState("Finished");
+        await Task.Delay(1000);
+        ScrollPegListToBottom();
     }
 
-    public void Receive(GameMoveMessage message)
+    public void Receive(MakeMoveMessage message)
     {
-        if (message.GameMoveValue is not GameMoveValue.Completed)
+        // Move must be completed
+        if (!message.IsSet)
             return;
 
-        var selectionAndKeyPegs = message.SelectionAndKeyPegs ?? throw new InvalidOperationException();
         var animationService = ConnectedAnimationService.GetForCurrentView();
         animationService.DefaultDuration = TimeSpan.FromMilliseconds(500);
-        var container = listGameMoves.ItemContainerGenerator.ContainerFromItem(selectionAndKeyPegs);
-        this.FindItemsOfType<Ellipse>(container)
+        listGameMoves
+            .ItemContainerGenerator
+            .ContainerFromIndex(listGameMoves.Items.Count - 1)
+            .FindChildrenRecursively<Ellipse>()
             .Foreach((ellipse, i) =>
             {
                 ConnectedAnimation? animation = animationService.GetAnimation($"guess{i}");
@@ -58,8 +60,17 @@ public sealed partial class GamePage : Page, IRecipient<GameMoveMessage>
                 animation.TryStart(ellipse);
             });
 
-        // Scroll to bottom
+        ScrollPegListToBottom();
+    }
+
+    private void ScrollPegListToBottom()
+    {
         PegScrollViewer.UpdateLayout();
-        PegScrollViewer.ScrollToVerticalOffset(PegScrollViewer.ScrollableHeight);
+        PegScrollViewer.ChangeView(null, PegScrollViewer.ScrollableHeight, null, false);
+    }
+
+    public void Receive(GameCancelledMessage message)
+    {
+        this.GoToState("Start");
     }
 }
