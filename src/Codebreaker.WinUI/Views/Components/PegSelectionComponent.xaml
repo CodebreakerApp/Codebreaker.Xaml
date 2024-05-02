@@ -7,6 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vmComponents="using:Codebreaker.ViewModels.Components"
+    xmlns:models="using:Codebreaker.ViewModels.Models"
     xmlns:toolkitConverters="using:CommunityToolkit.WinUI.UI.Converters"
     xmlns:cme="using:CodeBreaker.WinUI.CustomMarkupExtensions"
     mc:Ignorable="d"
@@ -14,17 +15,17 @@
 
     <UserControl.Resources>
         <toolkitConverters:BoolToVisibilityConverter x:Key="BoolToVisibility" />
-        <DataTemplate x:Key="SelectColorTemplate">
+        <DataTemplate x:Key="SelectColorTemplate" x:DataType="x:String">
             <Grid>
-                <Ellipse Fill="{Binding Mode=OneWay, Converter={StaticResource ColorConverter}}" Width="60" Height="60" />
+                <Ellipse Fill="{x:Bind Mode=OneWay, Converter={StaticResource ColorConverter}}" Width="60" Height="60" />
             </Grid>
         </DataTemplate>
-        <DataTemplate x:Key="SelectColorItemTemplate" x:DataType="vmComponents:SelectedFieldViewModel">
+        <DataTemplate x:Key="SelectColorItemTemplate" x:DataType="models:Field">
             <ComboBox
                 Margin="04" Width="112"
                 Height="92"
-                ItemsSource="{Binding ElementName=ThisControl, Path=DataContext.Game.FieldValues[colors], Mode=OneWay}"
-                SelectedItem="{x:Bind Path=Value, Mode=TwoWay}"
+                ItemsSource="{x:Bind PossibleColors, Mode=OneTime}"
+                SelectedItem="{x:Bind Color, Mode=TwoWay}"
                 ItemTemplate="{StaticResource SelectColorTemplate}"
                 PlaceholderText="❓" HorizontalContentAlignment="Center" FontSize="40" />
         </DataTemplate>
@@ -37,7 +38,7 @@
         </Grid.ColumnDefinitions>
         <ItemsControl
             Grid.Column="0"
-            ItemsSource="{x:Bind Path=ViewModel.Fields, Mode=OneWay}"
+            ItemsSource="{x:Bind Path=ViewModel.SelectedFields, Mode=OneWay}"
             ItemTemplate="{StaticResource SelectColorItemTemplate}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -45,10 +46,10 @@
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
         </ItemsControl>
-        <Button Command="{x:Bind ViewModel.SetMoveCommand, Mode=OneTime}" Grid.Column="1" Margin="4" VerticalAlignment="Top" Height="92" Width="100">
+        <Button Command="{x:Bind ViewModel.MakeMoveCommand, Mode=OneTime}" Grid.Column="1" Margin="4" VerticalAlignment="Top" Height="92" Width="100">
             <StackPanel Orientation="Vertical" Spacing="5">
-                <SymbolIcon Symbol="Send" Visibility="{x:Bind ViewModel.SetMoveCommand.IsRunning, Mode=OneWay, Converter={StaticResource BoolToVisibility}, ConverterParameter=True}" />
-                <ProgressRing Visibility="{x:Bind ViewModel.SetMoveCommand.IsRunning, Mode=OneWay}" />
+                <SymbolIcon Symbol="Send" Visibility="{x:Bind ViewModel.MakeMoveCommand.IsRunning, Mode=OneWay, Converter={StaticResource BoolToVisibility}, ConverterParameter=True}" />
+                <ProgressRing Visibility="{x:Bind ViewModel.MakeMoveCommand.IsRunning, Mode=OneWay}" />
                 <TextBlock Text="{cme:ResourceString Name=PegSelection_MakeMove}" />
             </StackPanel>
         </Button>
