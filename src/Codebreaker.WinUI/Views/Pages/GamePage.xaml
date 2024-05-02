@@ -13,7 +13,6 @@
     xmlns:cme="using:CodeBreaker.WinUI.CustomMarkupExtensions"
     mc:Ignorable="d">
     <Page.Resources>
-        <conv:GameStatusToVisibilityConverter x:Key="GameStatusVisibility" />
         <toolkitConverters:BoolToVisibilityConverter x:Key="BoolToVisibility" />
         <Style TargetType="InfoBar">
             <Setter Property="Margin" Value="0,0,0,30" />

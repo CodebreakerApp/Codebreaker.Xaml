@@ -10,7 +10,6 @@
     xmlns:cme="using:CodeBreaker.WinUI.CustomMarkupExtensions"
     mc:Ignorable="d">
     <UserControl.Resources>
-        <converter:GameStatusToVisibilityConverter x:Key="GameStatusToVisibilityConverter" />
         <animations:ImplicitAnimationSet x:Key="EntranceAnimation">
             <animations:OpacityAnimation Duration="0:0:2" From="0" To="1" />
             <animations:TranslationAnimation Duration="0:0:1" From="0,-300,0" To="0" />
