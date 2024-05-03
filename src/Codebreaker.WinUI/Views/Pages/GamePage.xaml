@@ -83,7 +83,9 @@
                 </StackPanel>
             </Button>
         </Grid>
-        <components:GameResultDisplay Grid.Row="0" />
+        <components:GameResultDisplay
+            Grid.Row="0"
+            ViewModel="{x:Bind ViewModel}" />
         <!--Gamebar section-->
         <StackPanel
             x:Name="PegSelectionArea"
