@@ -4,7 +4,9 @@ using CommunityToolkit.Mvvm.Messaging;
 
 namespace CodeBreaker.WinUI.Views.Components;
 
-public sealed partial class GameResultDisplay : UserControl, IRecipient<GameEndedMessage>
+public sealed partial class GameResultDisplay : UserControl,
+    IRecipient<GameEndedMessage>,
+    IRecipient<GameStartedMessage>
 {
     public GameResultDisplay()
     {
@@ -25,4 +27,7 @@ public sealed partial class GameResultDisplay : UserControl, IRecipient<GameEnde
 
     public void Receive(GameEndedMessage message) =>
         this.GoToState(message.IsVictory ? "Won" : "Lost");
+
+    public void Receive(GameStartedMessage message) =>
+        this.GoToState("Default");
 }
