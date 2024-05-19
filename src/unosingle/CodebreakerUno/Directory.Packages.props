@@ -1,0 +1,14 @@
+<Project ToolsVersion="15.0">
+  <!--
+    To update the version of Uno, you should instead update the Sdk version in the global.json file.
+
+    See https://aka.platform.uno/using-uno-sdk for more information.
+  -->
+  <ItemGroup>
+    <PackageVersion Include="CNInnovation.Codebreaker.ViewModels" Version="3.6.0-beta.34" />
+    <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+    <PackageVersion Include="CommunityToolkit.WinUI.Animations" Version="8.0.240109" />
+    <PackageVersion Include="CommunityToolkit.WinUI.Converters" Version="8.0.240109" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
+  </ItemGroup>
+</Project>

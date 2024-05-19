@@ -1,0 +1,86 @@
+﻿<UserControl
+    x:Class="CodeBreaker.Uno.Views.Components.GameResultDisplay"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:not_win="http://uno.ui/not_win"
+    xmlns:animations="using:CommunityToolkit.WinUI.Animations"
+    xmlns:converter="using:CodeBreaker.Uno.Converters"
+    xmlns:cme="using:CodeBreaker.Uno.CustomMarkupExtensions"
+    mc:Ignorable="d not_win"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+    <UserControl.Resources>
+        <converter:GameStatusToVisibilityConverter x:Key="GameStatusToVisibilityConverter" />
+        <animations:ImplicitAnimationSet x:Key="EntranceAnimation">
+            <animations:OpacityAnimation Duration="0:0:2" From="0" To="1" />
+            <animations:TranslationAnimation Duration="0:0:1" From="0,-300,0" To="0" />
+        </animations:ImplicitAnimationSet>
+        <animations:ImplicitAnimationSet x:Key="ExitAnimation">
+            <animations:OpacityAnimation Duration="0:0:0.5" From="1" To="0" />
+            <animations:TranslationAnimation Duration="0:0:1" From="0" To="0,-300,0" />
+        </animations:ImplicitAnimationSet>
+    </UserControl.Resources>
+    <Grid>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="Default">
+                    <VisualState.Setters>
+                        <Setter Target="WonPanel.Visibility" Value="Collapsed" />
+                        <Setter Target="LostPanel.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Won">
+                    <VisualState.Setters>
+                        <Setter Target="WonPanel.Visibility" Value="Visible" />
+                        <Setter Target="LostPanel.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Lost">
+                    <VisualState.Setters>
+                        <Setter Target="WonPanel.Visibility" Value="Collapsed" />
+                        <Setter Target="LostPanel.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <!-- Won - (Modern) Windows -->
+        <win:StackPanel
+            x:Name="WonPanel"
+            Orientation="Vertical"
+            animations:Implicit.ShowAnimations="{StaticResource EntranceAnimation}"
+            animations:Implicit.HideAnimations="{StaticResource ExitAnimation}">
+            <Image Source="ms-appx:///Assets/Animations/WonAnimation_300_opt.gif"  MaxHeight="300" />
+            <TextBlock Text="{cme:ResourceString Name=GamePage_WonMessage}" FontSize="{ThemeResource TextStyleExtraLargeFontSize}" HorizontalAlignment="Center" Margin="0,50,0,20" />
+            <Button Content="{cme:ResourceString Name=GamePage_WonButtonText}" HorizontalAlignment="Center" Margin="0,0,0,100" Command="{x:Bind ViewModel.StartGameCommand, Mode=OneTime}" />
+        </win:StackPanel>
+        <!-- Won - Other Platforms -->
+        <not_win:StackPanel
+            x:Name="WonPanel"
+            Orientation="Vertical">
+            <Image Source="ms-appx:///Assets/Animations/WonAnimation_300_opt.gif"  MaxHeight="300" />
+            <TextBlock Text="{cme:ResourceString Name=GamePage_WonMessage}" FontSize="{ThemeResource TextStyleExtraLargeFontSize}" HorizontalAlignment="Center" Margin="0,50,0,20" />
+            <Button Content="{cme:ResourceString Name=GamePage_WonButtonText}" HorizontalAlignment="Center" Margin="0,0,0,100" Command="{x:Bind ViewModel.StartGameCommand, Mode=OneTime}" />
+        </not_win:StackPanel>
+        <!-- Lost - (Modern) Windows -->
+        <win:StackPanel
+            x:Name="LostPanel"
+            Orientation="Vertical"
+            animations:Implicit.ShowAnimations="{StaticResource EntranceAnimation}"
+            animations:Implicit.HideAnimations="{StaticResource ExitAnimation}">
+            <Image Source="ms-appx:///Assets/Animations/LostAnimation_300_opt.gif"  MaxHeight="300" />
+            <TextBlock Text="{cme:ResourceString Name=GamePage_LostMessage}" FontSize="{ThemeResource TextStyleExtraLargeFontSize}" HorizontalAlignment="Center" Margin="0,50,0,20" />
+            <Button Content="{cme:ResourceString Name=GamePage_LostButtonText}" HorizontalAlignment="Center" Margin="0,0,0,100" Command="{x:Bind ViewModel.StartGameCommand, Mode=OneTime}" />
+        </win:StackPanel>
+        <!-- Lost - Other Platforms -->
+        <not_win:StackPanel
+            x:Name="LostPanel"
+            Orientation="Vertical">
+            <Image Source="ms-appx:///Assets/Animations/LostAnimation_300_opt.gif"  MaxHeight="300" />
+            <TextBlock Text="{cme:ResourceString Name=GamePage_LostMessage}" FontSize="{ThemeResource TextStyleExtraLargeFontSize}" HorizontalAlignment="Center" Margin="0,50,0,20" />
+            <Button Content="{cme:ResourceString Name=GamePage_LostButtonText}" HorizontalAlignment="Center" Margin="0,0,0,100" Command="{x:Bind ViewModel.StartGameCommand, Mode=OneTime}" />
+        </not_win:StackPanel>
+    </Grid>
+</UserControl>

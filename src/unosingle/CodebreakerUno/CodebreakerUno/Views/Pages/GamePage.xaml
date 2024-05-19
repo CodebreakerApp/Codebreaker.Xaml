@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="CodeBreaker.Uno.Views.Pages.GamePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:CodeBreaker.Uno.Views.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:components="using:CodeBreaker.Uno.Views.Components"
+    xmlns:conv="using:CodeBreaker.Uno.Converters"
+    xmlns:toolkitConverters="using:CommunityToolkit.WinUI.Converters"
+    xmlns:ca="using:CodeBreaker.Uno.CustomAttachedProperties"
+    xmlns:cme="using:CodeBreaker.Uno.CustomMarkupExtensions"
+    mc:Ignorable="d">
+    <Page.Resources>
+        <conv:GameStatusToVisibilityConverter x:Key="GameStatusVisibility" />
+        <toolkitConverters:BoolToVisibilityConverter x:Key="BoolToVisibility" />
+        <Style TargetType="InfoBar">
+            <Setter Property="Margin" Value="0,0,0,30" />
+        </Style>
+    </Page.Resources>
+    <Grid x:Name="ContentArea">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="Start">
+                    <VisualState.Setters>
+                        <Setter Target="StartGameArea.Visibility" Value="Visible" />
+                        <Setter Target="PegSelectionArea.Visibility" Value="Collapsed" />
+                        <Setter Target="PegScrollViewer.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Playing">
+                    <VisualState.Setters>
+                        <Setter Target="StartGameArea.Visibility" Value="Collapsed" />
+                        <Setter Target="PegSelectionArea.Visibility" Value="Visible" />
+                        <Setter Target="PegScrollViewer.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Finished">
+                    <VisualState.Setters>
+                        <Setter Target="StartGameArea.Visibility" Value="Collapsed" />
+                        <Setter Target="PegSelectionArea.Visibility" Value="Collapsed" />
+                        <Setter Target="PegScrollViewer.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+            <VisualStateGroup x:Name="ResponsiveStates">
+                <VisualState x:Name="WideState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="641" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="NameInput.(Grid.Column)" Value="0" />
+                        <Setter Target="NameInput.(Grid.RowSpan)" Value="2" />
+                        <Setter Target="NameSubmitButton.(Grid.Column)" Value="1" />
+                        <Setter Target="NameSubmitButton.(Grid.RowSpan)" Value="2" />
+
+                        <Setter Target="PegSelectionArea.Margin" Value="80,0,0,0" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="NarrowState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="NameInput.(Grid.Row)" Value="0" />
+                        <Setter Target="NameInput.(Grid.ColumnSpan)" Value="2" />
+                        <Setter Target="NameSubmitButton.(Grid.Row)" Value="1" />
+                        <Setter Target="NameSubmitButton.(Grid.ColumnSpan)" Value="2" />
+
+                        <Setter Target="PegSelectionArea.Margin" Value="0" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <components:GameResultDisplay
+            Grid.Row="0"
+            ViewModel="{x:Bind ViewModel, Mode=OneTime}" />
+        <!--Startgame section-->
+        <Grid
+            x:Name="StartGameArea"
+            Grid.Row="0"
+            ColumnSpacing="25"
+            RowSpacing="15">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid x:Name="NameInput">
+                 <!--The extra grid and the empy (enabled) TextBlock are necessary for showing the tooltip over the (disabled) TextBox.-->
+                <TextBlock />
+                <TextBox
+                    IsEnabled="{x:Bind ViewModel.IsNameEnterable, Mode=OneWay}"
+                    Header="{cme:ResourceString Name=GamePage_NameInputHeader}"
+                    PlaceholderText="{cme:ResourceString Name=GamePage_NameInputPlaceholder}"
+                    VerticalAlignment="Center"
+                    Text="{x:Bind ViewModel.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <ToolTipService.ToolTip>
+                    <ToolTip
+                        Content="{cme:ResourceString Name=GamePage_NameAlreadyProvidedTooltip}"
+                        IsEnabled="{x:Bind ViewModel.IsNamePredefined, Mode=OneWay}"
+                        Placement="Bottom" />
+                </ToolTipService.ToolTip>
+            </Grid>
+            <Button
+                x:Name="NameSubmitButton"
+                VerticalAlignment="Bottom"
+                HorizontalAlignment="Stretch"
+                Padding="35,8"
+                Command="{x:Bind ViewModel.StartGameCommand, Mode=OneTime}">
+                <StackPanel Orientation="Vertical" Spacing="5">
+                    <SymbolIcon Symbol="Play" Visibility="{x:Bind ViewModel.StartGameCommand.IsRunning, Mode=OneWay, Converter={StaticResource BoolToVisibility}, ConverterParameter=True}" />
+                    <ProgressRing Visibility="{x:Bind ViewModel.StartGameCommand.IsRunning, Mode=OneWay}" Width="20" Height="20" />
+                    <TextBlock Text="{cme:ResourceString Name=GamePage_StartButtonText}" />
+                </StackPanel>
+            </Button>
+        </Grid>
+        <!--Gamebar section-->
+        <components:PegSelectionComponent
+            x:Name="PegSelectionArea"
+            Grid.Row="1"
+            ViewModel="{x:Bind ViewModel, Mode=OneWay}" />
+        <!--Move section-->
+        <ScrollViewer Grid.Row="2" Padding="0,0,0,15" x:Name="PegScrollViewer">
+            <ListBox 
+                x:Name="listGameMoves"
+                Background="Transparent"
+                SelectedIndex="-1"
+                IsHitTestVisible="False"
+                Visibility="{x:Bind ViewModel.GameStatus, Mode=OneWay, Converter={StaticResource GameStatusVisibility}, ConverterParameter=Running}"
+                ItemsSource="{x:Bind ViewModel.GameMoves, Mode=OneWay}"
+                ItemTemplate="{StaticResource PegsTemplate}" />
+        </ScrollViewer>
+    </Grid>
+</Page>

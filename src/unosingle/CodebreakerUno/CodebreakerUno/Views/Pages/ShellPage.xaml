@@ -1,0 +1,62 @@
+﻿<Page x:Class="CodeBreaker.Uno.Views.Pages.ShellPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:CodeBreaker.Uno"
+      xmlns:ca="using:CodeBreaker.Uno.CustomAttachedProperties"
+      xmlns:cme="using:CodeBreaker.Uno.CustomMarkupExtensions"
+      xmlns:components="using:CodeBreaker.Uno.Views.Components"
+      Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid>
+        <Grid x:Name="AppTitleBar"
+            Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+            Canvas.ZIndex="1"
+            Height="{x:Bind NavigationViewControl.CompactPaneLength}"
+            IsHitTestVisible="True"
+            VerticalAlignment="Top">
+            <Image Source="/Assets/WindowIcon.png"
+                HorizontalAlignment="Left"
+                Width="16"
+                Height="16" />
+            <TextBlock x:Name="AppTitleBarText"
+                VerticalAlignment="Center"
+                TextWrapping="NoWrap"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Margin="5,0,0,0"/>
+        </Grid>
+        <NavigationView
+            x:Name="NavigationViewControl"
+            Canvas.ZIndex="0"
+            IsBackButtonVisible="Visible"
+            IsBackEnabled="{x:Bind ViewModel.IsBackEnabled, Mode=OneWay}"
+            SelectedItem="{x:Bind ViewModel.Selected, Mode=OneWay}"
+            IsSettingsVisible="True"
+            ExpandedModeThresholdWidth="1280"
+            AlwaysShowHeader="True"
+            DisplayModeChanged="NavigationViewControl_DisplayModeChanged"
+            Header="{x:Bind ViewModel.Header, Mode=OneWay}">
+            <NavigationView.MenuItems>
+                <NavigationViewItem
+                    Content="{cme:ResourceString Name=ShellPage_GameTab}"
+                    ca:NavigationHelper.NavigateTo="GamePage"
+                    ca:NavigationViewItemHelper.IconGlyph="&#xe7c3;" />
+            </NavigationView.MenuItems>
+            <NavigationView.HeaderTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <components:InfoBarArea Grid.Row="0" Margin="-50,20,0,0" />
+                        <TextBlock
+                            Grid.Row="1"
+                            Margin="-25,20,0,0"
+                            Text="{Binding}"
+                            Style="{ThemeResource TitleTextBlockStyle}" />
+                    </Grid>
+                </DataTemplate>
+            </NavigationView.HeaderTemplate>
+            <Frame Margin="30,0,30,0" x:Name="NavigationFrame" />
+        </NavigationView>
+    </Grid>
+</Page>
