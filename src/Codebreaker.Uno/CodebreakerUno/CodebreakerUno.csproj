@@ -56,6 +56,9 @@
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Assets\Icons\icon_foreground.svg" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="CNInnovation.Codebreaker.ViewModels" />
@@ -100,7 +103,8 @@
   </ItemGroup>
   
   <ItemGroup>
-    <UnoImage Include="Assets\Icons\icon.svg" />
+    <UnoIcon Include="Assets\Icons\icon.svg" />
+    <UnoIcon Include="Assets\Icons\icon_foreground.svg" />
   </ItemGroup>
 
 </Project>
