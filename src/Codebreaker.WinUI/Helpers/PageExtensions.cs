@@ -30,12 +30,12 @@ internal static class PageExtensions
         page.Unloaded += Callback;
     }
 
-    public static IEnumerable<T> FindItemsOfType<T>(this DependencyObject dependencyObject, DependencyObject obj)
+    public static IEnumerable<T> FindChildrenRecursively<T>(this DependencyObject dependencyObject)
         where T : DependencyObject
     {
-        for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
+        for (int i = 0; i < VisualTreeHelper.GetChildrenCount(dependencyObject); i++)
         {
-            DependencyObject child = VisualTreeHelper.GetChild(obj, i);
+            DependencyObject child = VisualTreeHelper.GetChild(dependencyObject, i);
 
             if (child is null)
                 yield break;
@@ -43,7 +43,7 @@ internal static class PageExtensions
             if (child is T item)
                 yield return item;
 
-            foreach (T childOfChild in dependencyObject.FindItemsOfType<T>(child))
+            foreach (T childOfChild in child.FindChildrenRecursively<T>())
                 yield return childOfChild;
         }
     }

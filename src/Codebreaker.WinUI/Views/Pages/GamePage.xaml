@@ -13,7 +13,6 @@
     xmlns:cme="using:CodeBreaker.WinUI.CustomMarkupExtensions"
     mc:Ignorable="d">
     <Page.Resources>
-        <conv:GameStatusToVisibilityConverter x:Key="GameStatusVisibility" />
         <toolkitConverters:BoolToVisibilityConverter x:Key="BoolToVisibility" />
         <Style TargetType="InfoBar">
             <Setter Property="Margin" Value="0,0,0,30" />
@@ -66,17 +65,10 @@
                 <!-- The extra grid and the empy (enabled) TextBlock are necessary for showing the tooltip over the (disabled) TextBox. -->
                 <TextBlock />
                 <TextBox
-                    IsEnabled="{x:Bind ViewModel.IsNameEnterable, Mode=OneWay}"
                     Header="{cme:ResourceString Name=GamePage_NameInputHeader}"
                     PlaceholderText="{cme:ResourceString Name=GamePage_NameInputPlaceholder}"
                     VerticalAlignment="Center"
-                    Text="{x:Bind ViewModel.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <ToolTipService.ToolTip>
-                    <ToolTip
-                    Content="{cme:ResourceString Name=GamePage_NameAlreadyProvidedTooltip}"
-                    IsEnabled="{x:Bind Path=ViewModel.IsNamePredefined, Mode=OneWay}"
-                    Placement="Bottom" />
-                </ToolTipService.ToolTip>
+                    Text="{x:Bind ViewModel.Username, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </Grid>
             <Button
                 Grid.Column="1"
@@ -91,14 +83,14 @@
                 </StackPanel>
             </Button>
         </Grid>
-        <components:GameResultDisplay Grid.Row="0" />
+        <components:GameResultDisplay
+            Grid.Row="0"
+            ViewModel="{x:Bind ViewModel}" />
         <!--Gamebar section-->
         <StackPanel
             x:Name="PegSelectionArea"
             Orientation="Horizontal"
             Grid.Row="1">
-            <!--
-            Cancelling the game is not yet implemented in the VM
             <Button
                 Height="92" Margin="0,-6,4,0" Width="100"
                 ca:Confirm.Enabled="True"
@@ -112,11 +104,11 @@
                     <ProgressRing Visibility="{x:Bind ViewModel.CancelGameCommand.IsRunning, Mode=OneWay}" />
                     <TextBlock Text="{cme:ResourceString Name=GamePage_CancelButtonText}" />
                 </StackPanel>
-            </Button>-->
-                <components:PegSelectionComponent 
-                    Grid.Row="3"
-                    Margin="65,0,0,0"
-                    ViewModel="{x:Bind ViewModel, Mode=OneWay}" />
+            </Button>
+            <components:PegSelectionComponent 
+                Grid.Row="3"
+                Margin="65,0,0,0"
+                ViewModel="{x:Bind ViewModel, Mode=OneWay}" />
         </StackPanel>
         <!--Move section-->
         <ScrollViewer Grid.Row="2" Padding="0,0,0,15" x:Name="PegScrollViewer">
@@ -125,7 +117,7 @@
                 Background="Transparent"
                 SelectedIndex="-1"
                 IsHitTestVisible="False"
-                ItemsSource="{x:Bind ViewModel.GameMoves, Mode=OneWay}"
+                ItemsSource="{x:Bind ViewModel.Game.Moves, Mode=OneWay}"
                 ItemTemplate="{StaticResource PegsTemplate}" />
         </ScrollViewer>
     </Grid>
