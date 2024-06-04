@@ -11,6 +11,7 @@ global using Microsoft.UI.Xaml.Controls;
 global using Microsoft.UI.Xaml.Media;
 global using Microsoft.UI.Xaml.Navigation;
 global using Microsoft.Extensions.Options;
+global using CodebreakerUno;
 global using CodeBreaker.Uno.Business.Models;
 global using CodeBreaker.Uno.Infrastructure;
 global using Uno.UI;

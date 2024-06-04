@@ -1,6 +1,7 @@
 using Codebreaker.ViewModels;
 using CodeBreaker.Uno.Helpers;
 using CommunityToolkit.Mvvm.Messaging;
+using Windows.ApplicationModel.Resources;
 #if WINDOWS10_0_17763_0_OR_GREATER
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Shapes;
