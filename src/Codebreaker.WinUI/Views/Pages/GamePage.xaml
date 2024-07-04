@@ -6,7 +6,7 @@
     xmlns:local="using:CodeBreaker.WinUI.Views.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:components="using:CodeBreaker.WinUI.Views.Components"
+    xmlns:gamePageComponents="using:CodeBreaker.WinUI.Views.Components.GamePage"
     xmlns:conv="using:CodeBreaker.WinUI.Converters"
     xmlns:toolkitConverters="using:CommunityToolkit.WinUI.UI.Converters"
     xmlns:ca="using:CodeBreaker.WinUI.CustomAttachedProperties"
@@ -49,7 +49,7 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <components:GameResultDisplay
+        <gamePageComponents:GameResultDisplay
             Grid.Row="0"
             ViewModel="{x:Bind ViewModel, Mode=OneTime}" />
         <!--Startgame section-->
@@ -83,7 +83,7 @@
                 </StackPanel>
             </Button>
         </Grid>
-        <components:GameResultDisplay
+        <gamePageComponents:GameResultDisplay
             Grid.Row="0"
             ViewModel="{x:Bind ViewModel}" />
         <!--Gamebar section-->
@@ -105,7 +105,7 @@
                     <TextBlock Text="{cme:ResourceString Name=GamePage_CancelButtonText}" />
                 </StackPanel>
             </Button>
-            <components:PegSelectionComponent 
+            <gamePageComponents:PegSelectionComponent 
                 Grid.Row="3"
                 Margin="65,0,0,0"
                 ViewModel="{x:Bind ViewModel, Mode=OneWay}" />

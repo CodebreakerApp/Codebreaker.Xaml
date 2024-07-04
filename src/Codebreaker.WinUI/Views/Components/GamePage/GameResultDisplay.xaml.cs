@@ -2,7 +2,7 @@ using Codebreaker.ViewModels;
 using Codebreaker.ViewModels.Messages;
 using CommunityToolkit.Mvvm.Messaging;
 
-namespace CodeBreaker.WinUI.Views.Components;
+namespace CodeBreaker.WinUI.Views.Components.GamePage;
 
 public sealed partial class GameResultDisplay : UserControl,
     IRecipient<GameEndedMessage>,
