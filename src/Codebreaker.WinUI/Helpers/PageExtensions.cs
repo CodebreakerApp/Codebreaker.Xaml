@@ -5,6 +5,11 @@ namespace CodeBreaker.WinUI.Helpers;
 
 internal static class PageExtensions
 {
+    public static void RegisterAllAndUnregisterAllOnUnloaded(this IMessenger messenger, FrameworkElement page)
+    {
+        messenger.RegisterAll(page);
+        messenger.UnregisterAllOnUnloaded(page, page);
+    }
     public static void UnregisterAllOnUnloaded(this IMessenger messenger, FrameworkElement page) =>
         messenger.UnregisterAllOnUnloaded(page, page);
 
