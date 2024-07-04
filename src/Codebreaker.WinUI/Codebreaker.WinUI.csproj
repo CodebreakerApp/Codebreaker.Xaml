@@ -64,11 +64,6 @@
     <PackageReference Include="WinUIEx" Version="2.3.4" />
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Views\Templates\CodeBreakerTemplates.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
     <Page Update="Styles\FontSizes.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
