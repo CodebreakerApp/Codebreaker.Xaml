@@ -98,6 +98,9 @@
   <ItemGroup>
     <None Remove="Assets\Animations\LostAnimation_300_opt.gif" />
     <None Remove="Assets\Animations\WonAnimation_300_opt.gif" />
+    <None Remove="Views\Components\GamePage\Gamebar.xaml" />
+    <None Remove="Views\Components\GamePage\Moves.xaml" />
+    <None Remove="Views\Components\GamePage\StartGameComponent.xaml" />
     <None Remove="Views\Components\GameResultDisplay.xaml" />
     <None Remove="Views\Components\InfoBarArea.xaml" />
     <None Remove="Views\Components\PegSelectionComponent.xaml" />
@@ -113,6 +116,21 @@
     <Content Update="Assets\Animations\WonAnimation_300_opt.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Components\GamePage\Moves.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Components\GamePage\Gamebar.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Components\GamePage\StartGameComponent.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\Components\GameResultDisplay.xaml">
