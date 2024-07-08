@@ -59,7 +59,7 @@ public partial class GamePageViewModel(IGamesClient gamesClient, IInfoBarService
         SelectedFields = Enumerable.Range(0, Game.NumberCodes)
             .Select(i =>
             {
-                var field = new Field(Game.FieldValues["colors"]);   // TODO: Hardcoding "colors" is not suitable for all game types
+                var field = new Field() { PossibleColors = Game.FieldValues["colors"], PossibleShapes = Game.FieldValues.GetOrDefault("shapes") };
                 field.PropertyChanged += (object? sender, PropertyChangedEventArgs args) => MakeMoveCommand.NotifyCanExecuteChanged();
                 return field;
             })
@@ -74,21 +74,18 @@ public partial class GamePageViewModel(IGamesClient gamesClient, IInfoBarService
         if (Game is null)
             throw new InvalidOperationException("A game needs to be started before making a move");
 
-        var selectedColors = SelectedFields
-            .Select(x => x.Color)
-            .ToArray();
-
-        if (selectedColors.Any(color => color is null))
+        if (SelectedFields.Any(field => !field.IsSet))
             throw new InvalidOperationException("All colors need to be selected before making a move");
 
-        WeakReferenceMessenger.Default.Send(new MakeMoveMessage(new(selectedColors!)));
+        WeakReferenceMessenger.Default.Send(new MakeMoveMessage(new(SelectedFields)));
 
+        var serializedFields = SelectedFields.Select(field => field.Serialize()).ToArray();
         IsLoading = true;
         try
         {
-            var response = await gamesClient.SetMoveAsync(Game.Id, Game.PlayerName, GameType.Game6x4, Game.Moves.Count + 1, selectedColors!);
+            var response = await gamesClient.SetMoveAsync(Game.Id, Game.PlayerName, GameType.Game6x4, Game.Moves.Count + 1, serializedFields);
 
-            var newMove = new Move(selectedColors!, response.Results);
+            var newMove = new Move(SelectedFields, response.Results);
             Game.Moves.Add(newMove);
             WeakReferenceMessenger.Default.Send(new MakeMoveMessage(newMove));
 
