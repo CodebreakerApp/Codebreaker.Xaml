@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="CodeBreaker.WinUI.Views.Components.GamePage.Gamebar"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:CodeBreaker.WinUI.Views.Components.GamePage"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ca="using:CodeBreaker.WinUI.CustomAttachedProperties"
+    xmlns:cme="using:CodeBreaker.WinUI.CustomMarkupExtensions"
+    xmlns:toolkitConverters="using:CommunityToolkit.WinUI.UI.Converters"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <toolkitConverters:BoolToVisibilityConverter x:Key="BoolToVisibility" />
+    </UserControl.Resources>
+
+    <StackPanel Orientation="Horizontal">
+        <Button
+        Height="92" Margin="0,-6,4,0" Width="100"
+        ca:Confirm.Enabled="True"
+        ca:Confirm.Title="{cme:ResourceString Name=GamePage_CancelConfirmTitle}"
+        ca:Confirm.Content="{cme:ResourceString Name=GamePage_CancelConfirmContent}"
+        ca:Confirm.PrimaryCommand="{x:Bind ViewModel.CancelGameCommand, Mode=OneTime}"
+        ca:Confirm.PrimaryText="{cme:ResourceString Name=Yes}"
+        ca:Confirm.CloseText="{cme:ResourceString Name=No}">
+            <StackPanel Orientation="Vertical" Spacing="05">
+                <SymbolIcon Symbol="Cancel" Visibility="{x:Bind ViewModel.CancelGameCommand.IsRunning, Mode=OneWay,Converter={StaticResource BoolToVisibility},ConverterParameter=True}" />
+                <ProgressRing Visibility="{x:Bind ViewModel.CancelGameCommand.IsRunning, Mode=OneWay}" />
+                <TextBlock Text="{cme:ResourceString Name=GamePage_CancelButtonText}" />
+            </StackPanel>
+        </Button>
+        <local:PegSelectionComponent
+        Grid.Row="3"
+        Margin="65,0,0,0"
+        ViewModel="{x:Bind ViewModel, Mode=OneWay}" />
+    </StackPanel>
+</UserControl>

@@ -1,11 +1,11 @@
 ﻿namespace Codebreaker.ViewModels.Models;
 
-public class Move(ICollection<string> guessPegs, ICollection<string>? keyPegs = null)
+public class Move(ICollection<Field> guessPegs, ICollection<string>? keyPegs = null)
 {
     /// <summary>
     /// The guess pegs from the user for this move.
     /// </summary>
-    public ICollection<string> GuessPegs { get; } = guessPegs;
+    public ICollection<Field> GuessPegs { get; } = guessPegs;
 
     /// <summary>
     /// The result from the analyer for this move based on the associated game that contains the move.

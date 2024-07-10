@@ -3,7 +3,7 @@ using Codebreaker.ViewModels.Messages;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Media.Animation;
 
-namespace CodeBreaker.WinUI.Views.Components;
+namespace CodeBreaker.WinUI.Views.Components.GamePage;
 
 internal sealed partial class PegSelectionComponent : UserControl, IRecipient<MakeMoveMessage>
 {

@@ -1,6 +1,6 @@
 using Codebreaker.ViewModels.Contracts.Services;
 
-namespace CodeBreaker.WinUI.Views.Components;
+namespace CodeBreaker.WinUI.Views.Components.General;
 
 internal sealed partial class InfoBarArea : UserControl
 {

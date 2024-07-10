@@ -3,9 +3,18 @@
 /// <summary>
 /// Represents a field in a move.
 /// </summary>
-/// <param name="possibleColors">The possible colors for this field.</param>
-public partial class Field(string[] possibleColors) : ObservableObject
+public partial class Field : ObservableObject
 {
+    public Field()
+    {
+    }
+
+    public Field(string? color, string? shape)
+    {
+        Color = color;
+        Shape = shape;
+    }
+
     /// <summary>
     /// The selected color for this field.
     /// </summary>
@@ -13,7 +22,8 @@ public partial class Field(string[] possibleColors) : ObservableObject
     private string? _color;
 
     /// <summary>
-    /// The possible colors for this field.
+    /// The selected shape for this field.
     /// </summary>
-    public string[] PossibleColors { get; init; } = possibleColors;
+    [ObservableProperty]
+    private string? _shape;
 }

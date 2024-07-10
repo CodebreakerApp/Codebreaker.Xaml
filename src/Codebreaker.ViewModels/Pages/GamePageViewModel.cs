@@ -20,18 +20,27 @@ public partial class GamePageViewModel(IGamesClient gamesClient, IInfoBarService
     [NotifyCanExecuteChangedFor(nameof(StartGameCommand))]
     private string _username = string.Empty;
 
+    [ObservableProperty]
+    private GameType _selectedGameType = GameType.Game6x4;
+
+    public IEnumerable<GameType> GameTypes { get; } = [
+        GameType.Game6x4,
+        GameType.Game6x4Mini,
+        GameType.Game8x5,
+        GameType.Game5x5x4
+    ];
+
     private bool CanStartGame() => Username is not null && Username.Length > 2;
 
     [RelayCommand(CanExecute = nameof(CanStartGame))]
     private async Task StartGameAsync(CancellationToken cancellationToken)
     {
         IsLoading = true;
-        var usedGameMode = GameType.Game6x4;
         
         try
         {
-            var response = await gamesClient.StartGameAsync(usedGameMode, Username);
-            Game = new Game(response.Id, usedGameMode, Username, DateTime.Now, response.NumberCodes, response.MaxMoves, response.FieldValues);
+            var response = await gamesClient.StartGameAsync(SelectedGameType, Username);
+            Game = new Game(response.Id, SelectedGameType, Username, DateTime.Now, response.NumberCodes, response.MaxMoves, response.FieldValues);
         }
         catch (InvalidOperationException)
         {
@@ -59,7 +68,7 @@ public partial class GamePageViewModel(IGamesClient gamesClient, IInfoBarService
         SelectedFields = Enumerable.Range(0, Game.NumberCodes)
             .Select(i =>
             {
-                var field = new Field(Game.FieldValues["colors"]);   // TODO: Hardcoding "colors" is not suitable for all game types
+                var field = new Field();
                 field.PropertyChanged += (object? sender, PropertyChangedEventArgs args) => MakeMoveCommand.NotifyCanExecuteChanged();
                 return field;
             })
@@ -74,21 +83,20 @@ public partial class GamePageViewModel(IGamesClient gamesClient, IInfoBarService
         if (Game is null)
             throw new InvalidOperationException("A game needs to be started before making a move");
 
-        var selectedColors = SelectedFields
-            .Select(x => x.Color)
-            .ToArray();
-
-        if (selectedColors.Any(color => color is null))
+        if (SelectedFields.Any(field => field.Color is null))
             throw new InvalidOperationException("All colors need to be selected before making a move");
 
-        WeakReferenceMessenger.Default.Send(new MakeMoveMessage(new(selectedColors!)));
+        WeakReferenceMessenger.Default.Send(new MakeMoveMessage(new(SelectedFields)));
 
+        var serializedFields = SelectedFields.Select(field => field.Serialize()).ToArray();
         IsLoading = true;
         try
         {
-            var response = await gamesClient.SetMoveAsync(Game.Id, Game.PlayerName, GameType.Game6x4, Game.Moves.Count + 1, selectedColors!);
+            var response = await gamesClient.SetMoveAsync(Game.Id, Game.PlayerName, Game.GameType, Game.Moves.Count + 1, serializedFields);
 
-            var newMove = new Move(selectedColors!, response.Results);
+            // It is necessary to copy the fields to avoid every move having the same reference to the same fields
+            var copiedFields = SelectedFields.Select(f => new Field(f.Color, f.Shape)).ToArray();
+            var newMove = new Move(copiedFields, response.Results);
             Game.Moves.Add(newMove);
             WeakReferenceMessenger.Default.Send(new MakeMoveMessage(newMove));
 
