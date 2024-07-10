@@ -5,6 +5,16 @@
 /// </summary>
 public partial class Field : ObservableObject
 {
+    public Field()
+    {
+    }
+
+    public Field(string? color, string? shape)
+    {
+        Color = color;
+        Shape = shape;
+    }
+
     /// <summary>
     /// The selected color for this field.
     /// </summary>
