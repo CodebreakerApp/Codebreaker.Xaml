@@ -20,18 +20,27 @@ public partial class GamePageViewModel(IGamesClient gamesClient, IInfoBarService
     [NotifyCanExecuteChangedFor(nameof(StartGameCommand))]
     private string _username = string.Empty;
 
+    [ObservableProperty]
+    private GameType _selectedGameType = GameType.Game6x4;
+
+    public IEnumerable<GameType> GameTypes { get; } = [
+        GameType.Game6x4,
+        GameType.Game6x4Mini,
+        GameType.Game8x5,
+        GameType.Game5x5x4
+    ];
+
     private bool CanStartGame() => Username is not null && Username.Length > 2;
 
     [RelayCommand(CanExecute = nameof(CanStartGame))]
     private async Task StartGameAsync(CancellationToken cancellationToken)
     {
         IsLoading = true;
-        var usedGameMode = GameType.Game6x4;
         
         try
         {
-            var response = await gamesClient.StartGameAsync(usedGameMode, Username);
-            Game = new Game(response.Id, usedGameMode, Username, DateTime.Now, response.NumberCodes, response.MaxMoves, response.FieldValues);
+            var response = await gamesClient.StartGameAsync(SelectedGameType, Username);
+            Game = new Game(response.Id, SelectedGameType, Username, DateTime.Now, response.NumberCodes, response.MaxMoves, response.FieldValues);
         }
         catch (InvalidOperationException)
         {
@@ -83,7 +92,7 @@ public partial class GamePageViewModel(IGamesClient gamesClient, IInfoBarService
         IsLoading = true;
         try
         {
-            var response = await gamesClient.SetMoveAsync(Game.Id, Game.PlayerName, GameType.Game6x4, Game.Moves.Count + 1, serializedFields);
+            var response = await gamesClient.SetMoveAsync(Game.Id, Game.PlayerName, Game.GameType, Game.Moves.Count + 1, serializedFields);
 
             // It is necessary to copy the fields to avoid every move having the same reference to the same fields
             var copiedFields = SelectedFields.Select(f => new Field(f.Color, f.Shape)).ToArray();
