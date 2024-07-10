@@ -16,14 +16,4 @@ public partial class Field : ObservableObject
     /// </summary>
     [ObservableProperty]
     private string? _shape;
-
-    /// <summary>
-    /// The possible colors for this field.
-    /// </summary>
-    public string[]? PossibleColors { get; set; }
-
-    /// <summary>
-    /// The possible shapes for this field.
-    /// </summary>
-    public string[]? PossibleShapes { get; set; }
 }
