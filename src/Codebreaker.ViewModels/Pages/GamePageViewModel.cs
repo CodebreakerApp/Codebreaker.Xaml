@@ -85,7 +85,9 @@ public partial class GamePageViewModel(IGamesClient gamesClient, IInfoBarService
         {
             var response = await gamesClient.SetMoveAsync(Game.Id, Game.PlayerName, GameType.Game6x4, Game.Moves.Count + 1, serializedFields);
 
-            var newMove = new Move(SelectedFields, response.Results);
+            // It is necessary to copy the fields to avoid every move having the same reference to the same fields
+            var copiedFields = SelectedFields.Select(f => new Field(f.Color, f.Shape)).ToArray();
+            var newMove = new Move(copiedFields, response.Results);
             Game.Moves.Add(newMove);
             WeakReferenceMessenger.Default.Send(new MakeMoveMessage(newMove));
 
