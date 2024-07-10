@@ -59,7 +59,7 @@ public partial class GamePageViewModel(IGamesClient gamesClient, IInfoBarService
         SelectedFields = Enumerable.Range(0, Game.NumberCodes)
             .Select(i =>
             {
-                var field = new Field() { PossibleColors = Game.FieldValues["colors"], PossibleShapes = Game.FieldValues.GetOrDefault("shapes") };
+                var field = new Field();
                 field.PropertyChanged += (object? sender, PropertyChangedEventArgs args) => MakeMoveCommand.NotifyCanExecuteChanged();
                 return field;
             })
@@ -74,7 +74,7 @@ public partial class GamePageViewModel(IGamesClient gamesClient, IInfoBarService
         if (Game is null)
             throw new InvalidOperationException("A game needs to be started before making a move");
 
-        if (SelectedFields.Any(field => !field.IsSet))
+        if (SelectedFields.Any(field => field.Color is null))
             throw new InvalidOperationException("All colors need to be selected before making a move");
 
         WeakReferenceMessenger.Default.Send(new MakeMoveMessage(new(SelectedFields)));
