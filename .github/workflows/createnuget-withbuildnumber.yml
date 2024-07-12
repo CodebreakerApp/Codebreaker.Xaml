@@ -54,7 +54,6 @@ jobs:
         uses: actions/setup-dotnet@v4
         with: 
           dotnet-version: ${{ inputs.dotnet-version }}
-          dotnet-quality: 'preview'
 
       - name: Calculate version suffix with offset
         id: version
@@ -86,5 +85,5 @@ jobs:
         with:
           name: ${{ inputs.artifact-name }}
           path: packages/*
-          retention-days: 3
+          retention-days: 7
   

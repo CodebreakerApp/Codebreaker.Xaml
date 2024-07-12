@@ -22,7 +22,7 @@ jobs:
   build:
     uses: CodebreakerApp/Codebreaker.XAML/.github/workflows/createnuget-withbuildnumber.yml@main
     with:
-      version-suffix: beta.
+      version-suffix: preview.1.
       version-number: ${{ github.run_number }}
       version-offset: 10
       solutionfile-path: src/CodeBreaker.ViewModels.sln
@@ -38,9 +38,9 @@ jobs:
       artifact-name: codebreaker-viewmodels
     secrets: inherit
 
-  publishnuget:
-    uses: CodebreakerApp/Codebreaker.XAML/.github/workflows/publishnuget-nugetserver.yml@main
-    needs: publishdevops
-    with:
-      artifact-name: codebreaker-viewmodels
-    secrets: inherit
+  # publishnuget:
+  #  uses: CodebreakerApp/Codebreaker.XAML/.github/workflows/publishnuget-nugetserver.yml@main
+  #  needs: publishdevops
+  #  with:
+  #    artifact-name: codebreaker-viewmodels
+  #  secrets: inherit
