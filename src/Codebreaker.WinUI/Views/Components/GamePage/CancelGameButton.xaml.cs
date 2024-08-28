@@ -2,11 +2,11 @@ using Codebreaker.ViewModels;
 
 namespace CodeBreaker.WinUI.Views.Components.GamePage;
 
-public sealed partial class Gamebar : UserControl
+public sealed partial class CancelGameButton : UserControl
 {
-    public Gamebar()
+    public CancelGameButton()
     {
-        InitializeComponent();
+        this.InitializeComponent();
     }
 
     // Dependency property for the ViewModel
@@ -17,5 +17,5 @@ public sealed partial class Gamebar : UserControl
     }
 
     public static readonly DependencyProperty ViewModelProperty =
-        DependencyProperty.Register(nameof(ViewModel), typeof(GamePageViewModel), typeof(StartGameComponent), new PropertyMetadata(null));
+        DependencyProperty.Register(nameof(ViewModel), typeof(GamePageViewModel), typeof(CancelGameButton), new PropertyMetadata(null));
 }

@@ -264,4 +264,7 @@
   <data name="GamePage_NameInputHeader" xml:space="preserve">
     <value>Please enter your gamername:</value>
   </data>
+  <data name="GamePage_GameTypeSelectHeader" xml:space="preserve">
+    <value>Select a gametype:</value>
+  </data>
 </root>

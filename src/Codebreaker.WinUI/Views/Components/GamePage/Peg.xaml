@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="CodeBreaker.WinUI.Views.Components.GamePage.Peg"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:CodeBreaker.WinUI.Views.Components.GamePage"
+    xmlns:dts="using:CodeBreaker.WinUI.DataTemplateSelectors"
+    xmlns:converters="using:CodeBreaker.WinUI.Converters"
+    xmlns:models="using:Codebreaker.ViewModels.Models"
+    xmlns:shapes="using:CodeBreaker.WinUI.Views.Components.GamePage.Shapes"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <converters:ColornameToBrushConverter x:Key="ColorConverter" />
+        <dts:FieldDataTemplateSelector x:Key="FieldDataTemplateSelector">
+            <dts:FieldDataTemplateSelector.CircleTemplate>
+                <DataTemplate x:DataType="models:Field">
+                    <shapes:Circle
+                        ColorName="{x:Bind Color, Mode=OneWay}"
+                        Size="68"/>
+                </DataTemplate>
+            </dts:FieldDataTemplateSelector.CircleTemplate>
+            <dts:FieldDataTemplateSelector.SquareTemplate>
+                <DataTemplate x:DataType="models:Field">
+                    <shapes:Square
+                        ColorName="{x:Bind Color, Mode=OneWay}"
+                        Size="68" />
+                </DataTemplate>
+            </dts:FieldDataTemplateSelector.SquareTemplate>
+            <dts:FieldDataTemplateSelector.RectangleTemplate>
+                <DataTemplate x:DataType="models:Field">
+                    <shapes:Rectangle
+                        ColorName="{x:Bind Color, Mode=OneWay}"
+                        Width="68" Height="50" />
+                </DataTemplate>
+            </dts:FieldDataTemplateSelector.RectangleTemplate>
+            <dts:FieldDataTemplateSelector.TriangleTemplate>
+                <DataTemplate x:DataType="models:Field">
+                    <shapes:Triangle
+                        ColorName="{x:Bind Color, Mode=OneWay}"
+                        Size="68" />
+                </DataTemplate>
+            </dts:FieldDataTemplateSelector.TriangleTemplate>
+            <dts:FieldDataTemplateSelector.StarTemplate>
+                <DataTemplate x:DataType="models:Field">
+                    <shapes:Star
+                        ColorName="{x:Bind Color, Mode=OneWay}"
+                        Size="68" />
+                </DataTemplate>
+            </dts:FieldDataTemplateSelector.StarTemplate>
+            <dts:FieldDataTemplateSelector.DefaultTemplate>
+                <DataTemplate x:DataType="models:Field">
+                    <Border BorderThickness="1"
+                            BorderBrush="{ThemeResource PegStrokeColor}"
+                            CornerRadius="{ThemeResource ControlCornerRadius}"
+                            Background="{ThemeResource ControlAltFillColorTransparentBrush}"
+                            Width="68" Height="68">
+                        <TextBlock
+                            Text="?"
+                            FontSize="50"
+                            Foreground="{x:Bind Color, Mode=OneWay, Converter={StaticResource ColorConverter}}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"/>
+                    </Border>
+                </DataTemplate>
+            </dts:FieldDataTemplateSelector.DefaultTemplate>
+        </dts:FieldDataTemplateSelector>
+    </UserControl.Resources>
+
+    <ContentControl
+        x:Name="contentControl"
+        ContentTemplateSelector="{StaticResource FieldDataTemplateSelector}"
+        CanDrag="{x:Bind IsDraggable, Mode=OneWay}"
+        DragStarting="OnDragStarting"/>
+</UserControl>

@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using Microsoft.UI;
+﻿using Microsoft.UI;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Media;
 using Windows.UI;
@@ -16,17 +15,14 @@ public class ColornameToBrushConverter : IValueConverter
     private readonly static Brush s_yellowBrush = new SolidColorBrush(Color.FromArgb(255, 252, 225, 0));
     private readonly static Brush s_orangeBrush = new SolidColorBrush(Color.FromArgb(255, 234, 74, 33));
     private readonly static Brush s_purpleBrush = new SolidColorBrush(Color.FromArgb(255, 91, 95, 199));
-    private readonly static Brush s_emptyBrush = new SolidColorBrush(Color.FromArgb(255, 160, 174, 178));
+    private readonly static Brush s_brownBrush = new SolidColorBrush(Color.FromArgb(255, 157, 92, 35));
+    private readonly static Brush s_pinkBrush = new SolidColorBrush(Color.FromArgb(255, 230, 0, 226));
+    private readonly static Brush s_emptyBrushFallback = new SolidColorBrush(Color.FromArgb(255, 160, 174, 178));
 
-    public object Convert(object value, Type targetType, object parameter, string language)
-    {
-        if (value is null)
-            throw new ArgumentNullException(nameof(value));
+    private static Brush S_EmptyBrush => App.Current.Resources["SystemFillColorNeutralBrush"] as SolidColorBrush ?? s_emptyBrushFallback;
 
-        if (value is not string colorname)
-            throw new ArgumentException("Value is no string");
-
-        return colorname switch
+    public object Convert(object value, Type targetType, object parameter, string language) =>
+        value switch
         {
             "Black" => s_blackBrush,
             "White" => s_whiteBrush,
@@ -36,12 +32,11 @@ public class ColornameToBrushConverter : IValueConverter
             "Yellow" => s_yellowBrush,
             "Orange" => s_orangeBrush,
             "Purple" => s_purpleBrush,
-            _ => s_emptyBrush
+            "Brown" => s_brownBrush,
+            "Pink" => s_pinkBrush,
+            _ => S_EmptyBrush
         };
-    }
 
-    public object ConvertBack(object value, Type targetType, object parameter, string language)
-    {
+    public object ConvertBack(object value, Type targetType, object parameter, string language) =>
         throw new NotImplementedException();
-    }
 }

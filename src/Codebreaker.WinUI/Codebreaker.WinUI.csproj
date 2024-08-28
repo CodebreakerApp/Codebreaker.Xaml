@@ -94,7 +94,16 @@
     <None Remove="Assets\Animations\LostAnimation_300_opt.gif" />
     <None Remove="Assets\Animations\WonAnimation_300_opt.gif" />
     <None Remove="Styles\GameStyles.xaml" />
+    <None Remove="Views\Components\GamePage\CancelGameButton.xaml" />
     <None Remove="Views\Components\GamePage\Moves.xaml" />
+    <None Remove="Views\Components\GamePage\Peg.xaml" />
+    <None Remove="Views\Components\GamePage\PegSelections\PegSelectionBase.xaml" />
+    <None Remove="Views\Components\GamePage\Shapes\Circle.xaml" />
+    <None Remove="Views\Components\GamePage\Shapes\Rectangle.xaml" />
+    <None Remove="Views\Components\GamePage\Shapes\ShapeBase.xaml" />
+    <None Remove="Views\Components\GamePage\Shapes\Square.xaml" />
+    <None Remove="Views\Components\GamePage\Shapes\Star.xaml" />
+    <None Remove="Views\Components\GamePage\Shapes\Triangle.xaml" />
     <None Remove="Views\Components\GamePage\StartGameComponent.xaml" />
     <None Remove="Views\Components\GameResultDisplay.xaml" />
     <None Remove="Views\Components\InfoBarArea.xaml" />
@@ -113,12 +122,52 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Views\Components\GamePage\Moves.xaml">
+    <Page Update="Views\Components\GamePage\CancelGameButton.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Views\Components\GamePage\Gamebar.xaml">
+    <Page Update="Views\Components\GamePage\PegSelections\PegSelectionBase.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Components\GamePage\Shapes\ShapeBase.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Components\GamePage\Shapes\Star.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Components\GamePage\Shapes\Triangle.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Components\GamePage\Shapes\Rectangle.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Components\GamePage\Shapes\Square.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Styles\GameStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Components\GamePage\Peg.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Components\GamePage\Moves.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
@@ -154,6 +203,11 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\Components\PegSelectionComponent.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Components\GamePage\Shapes\Circle.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

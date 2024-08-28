@@ -4,60 +4,84 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:CodeBreaker.WinUI.Views.Pages"
+    xmlns:converters="using:CodeBreaker.WinUI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:gamePageComponents="using:CodeBreaker.WinUI.Views.Components.GamePage"
+    xmlns:test="using:CodeBreaker.WinUI.Views.Components.GamePage.Test"
     mc:Ignorable="d">
     <Page.Resources>
+        <converters:GetValueOrDefaultConverter x:Key="GetValueOrDefaultConverter" />
         <Style TargetType="InfoBar">
             <Setter Property="Margin" Value="0,0,0,30" />
         </Style>
     </Page.Resources>
-    <Grid x:Name="ContentArea">
+
+    <Grid>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState x:Name="Start">
                     <VisualState.Setters>
                         <Setter Target="StartGameArea.Visibility" Value="Visible" />
-                        <Setter Target="PegSelectionArea.Visibility" Value="Collapsed" />
-                        <Setter Target="MovesArea.Visibility" Value="Collapsed" />
+                        <Setter Target="PlayGameArea.Visibility" Value="Collapsed" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Playing">
                     <VisualState.Setters>
                         <Setter Target="StartGameArea.Visibility" Value="Collapsed" />
-                        <Setter Target="PegSelectionArea.Visibility" Value="Visible" />
-                        <Setter Target="MovesArea.Visibility" Value="Visible" />
+                        <Setter Target="PlayGameArea.Visibility" Value="Visible" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Finished">
                     <VisualState.Setters>
                         <Setter Target="StartGameArea.Visibility" Value="Collapsed" />
-                        <Setter Target="PegSelectionArea.Visibility" Value="Collapsed" />
-                        <Setter Target="MovesArea.Visibility" Value="Visible" />
+                        <Setter Target="PlayGameArea.Visibility" Value="Collapsed" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
+            
         </Grid.RowDefinitions>
-        <gamePageComponents:GameResultDisplay
-            Grid.Row="0"
-            ViewModel="{x:Bind ViewModel}" />
+        <!--The area for starting a game.-->
         <gamePageComponents:StartGameComponent
             x:Name="StartGameArea"
-            Grid.Row="0"
+            Grid.Row="0" Grid.Column="1"
             ViewModel="{x:Bind ViewModel}" />
-        <gamePageComponents:Gamebar
-            x:Name="PegSelectionArea"
-            Grid.Row="1"
-            ViewModel="{x:Bind ViewModel}" />
-        <gamePageComponents:Moves
-            x:Name="MovesArea"
-            Grid.Row="2"
-            ViewModel="{x:Bind ViewModel}" />
+
+        <!--This grid contains the area relevant for the actual game-->
+        <Grid x:Name="PlayGameArea" Grid.RowSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <gamePageComponents:GameResultDisplay
+                Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="5"
+                ViewModel="{x:Bind ViewModel}" />
+            <gamePageComponents:CancelGameButton
+                Grid.Row="0" Grid.Column="1"
+                ViewModel="{x:Bind ViewModel}" />
+            <gamePageComponents:PegSelectionComponent
+                Grid.Row="0" Grid.Column="2"
+                ViewModel="{x:Bind ViewModel}"
+                Padding="0"/>
+            <gamePageComponents:Moves
+                Grid.Row="1" Grid.Column="2"
+                ViewModel="{x:Bind ViewModel}" />
+            <gamePageComponents:PegPalette
+                Grid.Row="0" Grid.RowSpan="2" Grid.Column="3"
+                ColorNames="{x:Bind ViewModel.Game.FieldValues, Mode=OneWay, Converter={StaticResource GetValueOrDefaultConverter}, ConverterParameter=colors}"
+                ShapeNames="{x:Bind ViewModel.Game.FieldValues, Mode=OneWay, Converter={StaticResource GetValueOrDefaultConverter}, ConverterParameter=shapes}" />
+        </Grid>
     </Grid>
 </Page>

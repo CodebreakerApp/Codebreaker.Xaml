@@ -15,25 +15,33 @@
 
     <Grid ColumnSpacing="25">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition />
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0">
             <!-- The extra grid and the empy (enabled) TextBlock are necessary for showing the tooltip over the (disabled) TextBox. -->
             <TextBlock />
             <TextBox
-            Header="{cme:ResourceString Name=GamePage_NameInputHeader}"
-            PlaceholderText="{cme:ResourceString Name=GamePage_NameInputPlaceholder}"
-            VerticalAlignment="Center"
-            Text="{x:Bind ViewModel.Username, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                Header="{cme:ResourceString Name=GamePage_NameInputHeader}"
+                PlaceholderText="{cme:ResourceString Name=GamePage_NameInputPlaceholder}"
+                VerticalAlignment="Center"
+                Text="{x:Bind ViewModel.Username, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         </Grid>
+        <ComboBox
+            Grid.Column="1"
+            Header="{cme:ResourceString Name=GamePage_GameTypeSelectHeader}"
+            ItemsSource="{x:Bind ViewModel.GameTypes}"
+            SelectedItem="{x:Bind ViewModel.SelectedGameType, Mode=TwoWay}"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Center" />
         <Button
-        Grid.Column="1"
-        VerticalAlignment="Bottom"
-        HorizontalAlignment="Stretch"
-        Padding="35,8"
-        Command="{x:Bind ViewModel.StartGameCommand, Mode=OneTime}">
-            <StackPanel Orientation="Vertical" Spacing="5">
+            Grid.Column="2"
+            VerticalAlignment="Bottom"
+            HorizontalAlignment="Stretch"
+            Padding="36,12"
+            Command="{x:Bind ViewModel.StartGameCommand, Mode=OneTime}">
+            <StackPanel Orientation="Vertical" Spacing="8">
                 <SymbolIcon Symbol="Play" Visibility="{x:Bind ViewModel.StartGameCommand.IsRunning, Mode=OneWay, Converter={StaticResource BoolToVisibility}, ConverterParameter=True}" />
                 <ProgressRing Visibility="{x:Bind ViewModel.StartGameCommand.IsRunning, Mode=OneWay}" Width="20" Height="20" />
                 <TextBlock Text="{cme:ResourceString Name=GamePage_StartButtonText}" />

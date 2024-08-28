@@ -6,49 +6,58 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vmComponents="using:Codebreaker.ViewModels.Components"
-    xmlns:models="using:Codebreaker.ViewModels.Models"
+    xmlns:vm="using:Codebreaker.ViewModels.Models"
     xmlns:toolkitConverters="using:CommunityToolkit.WinUI.UI.Converters"
     xmlns:converters="using:CodeBreaker.WinUI.Converters"
     xmlns:cme="using:CodeBreaker.WinUI.CustomMarkupExtensions"
+    xmlns:dts="using:CodeBreaker.WinUI.DataTemplateSelectors"
+    xmlns:gameComponents="using:CodeBreaker.WinUI.Views.Components.GamePage"
+    xmlns:shapes="using:CodeBreaker.WinUI.Views.Components.GamePage.Shapes"
     mc:Ignorable="d"
     x:Name="ThisControl">
-
     <UserControl.Resources>
         <converters:ColornameToBrushConverter x:Key="ColorConverter" />
         <toolkitConverters:BoolToVisibilityConverter x:Key="BoolToVisibility" />
-        <DataTemplate x:Key="SelectColorTemplate" x:DataType="x:String">
-            <Grid>
-                <Ellipse Fill="{x:Bind Mode=OneWay, Converter={StaticResource ColorConverter}}" Width="60" Height="60" />
-            </Grid>
-        </DataTemplate>
-        <DataTemplate x:Key="SelectColorItemTemplate" x:DataType="models:Field">
-            <ComboBox
-                Margin="04" Width="112"
-                Height="92"
-                ItemsSource="{x:Bind PossibleColors, Mode=OneTime}"
-                SelectedItem="{x:Bind Color, Mode=TwoWay}"
-                ItemTemplate="{StaticResource SelectColorTemplate}"
-                PlaceholderText="❓" HorizontalContentAlignment="Center" FontSize="40" />
-        </DataTemplate>
     </UserControl.Resources>
 
-    <Grid>
+    <Grid ColumnSpacing="24" Padding="12,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="auto" />
         </Grid.ColumnDefinitions>
         <ItemsControl
+            Grid.Row="1"
             Grid.Column="0"
-            ItemsSource="{x:Bind Path=ViewModel.SelectedFields, Mode=OneWay}"
-            ItemTemplate="{StaticResource SelectColorItemTemplate}">
+            ItemsSource="{x:Bind Path=ViewModel.SelectedFields, Mode=OneWay}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <StackPanel Orientation="Horizontal" Margin="15,0,15,10" />
+                    <StackPanel Orientation="Horizontal" Spacing="12" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:Field">
+                    <gameComponents:Peg
+                        ColorName="{x:Bind Color, Mode=TwoWay}"
+                        ShapeName="{x:Bind Shape, Mode=TwoWay}"
+                        AllowDrop="True"
+                        DragOver="PegDragOver"
+                        Drop="PegDrop"
+                        IsDraggable="True"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center" />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
         </ItemsControl>
-        <Button Command="{x:Bind ViewModel.MakeMoveCommand, Mode=OneTime}" Grid.Column="1" Margin="4" VerticalAlignment="Top" Height="92" Width="100">
-            <StackPanel Orientation="Vertical" Spacing="5">
+        <Button
+            Grid.Row="1" Grid.Column="1"
+            VerticalAlignment="Top"
+            Padding="12"
+            Command="{x:Bind ViewModel.MakeMoveCommand, Mode=OneTime}">
+            <StackPanel Orientation="Vertical" Spacing="8">
                 <SymbolIcon Symbol="Send" Visibility="{x:Bind ViewModel.MakeMoveCommand.IsRunning, Mode=OneWay, Converter={StaticResource BoolToVisibility}, ConverterParameter=True}" />
                 <ProgressRing Visibility="{x:Bind ViewModel.MakeMoveCommand.IsRunning, Mode=OneWay}" />
                 <TextBlock Text="{cme:ResourceString Name=PegSelection_MakeMove}" />
