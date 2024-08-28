@@ -49,7 +49,7 @@
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="CNInnovation.Codebreaker.ViewModels" Version="3.7.0-beta.40" />
+    <PackageReference Include="CNInnovation.Codebreaker.ViewModels" Version="4.0.0-preview.1.42" />
     <PackageReference Include="CommunityToolkit.WinUI.UI" Version="7.1.2" />
     <PackageReference Include="CommunityToolkit.WinUI.UI.Animations" Version="7.1.2" />
     <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
