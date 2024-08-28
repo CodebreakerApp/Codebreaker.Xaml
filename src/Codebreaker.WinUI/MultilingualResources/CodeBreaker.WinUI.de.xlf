@@ -199,8 +199,12 @@
           <target state="final">Glückwunsch - Sie haben das Spiel gewonnen 🎉🏆</target>
         </trans-unit>
         <trans-unit id="GamePage_NameInputHeader" translate="yes" xml:space="preserve">
-          <source>Bitte geben Sie Ihren Spielernamen an:</source>
-          <target state="new">Bitte geben Sie Ihren Spielernamen an:</target>
+          <source>Please enter your gamername:</source>
+          <target state="new">Please enter your gamername:</target>
+        </trans-unit>
+        <trans-unit id="GamePage_GameTypeSelectHeader" translate="yes" xml:space="preserve">
+          <source>Select a gametype:</source>
+          <target state="new">Select a gametype:</target>
         </trans-unit>
       </group>
     </body>
