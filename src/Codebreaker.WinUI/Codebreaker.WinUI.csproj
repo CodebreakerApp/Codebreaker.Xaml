@@ -93,7 +93,7 @@
   <ItemGroup>
     <None Remove="Assets\Animations\LostAnimation_300_opt.gif" />
     <None Remove="Assets\Animations\WonAnimation_300_opt.gif" />
-    <None Remove="Views\Components\GamePage\Gamebar.xaml" />
+    <None Remove="Styles\GameStyles.xaml" />
     <None Remove="Views\Components\GamePage\Moves.xaml" />
     <None Remove="Views\Components\GamePage\StartGameComponent.xaml" />
     <None Remove="Views\Components\GameResultDisplay.xaml" />
