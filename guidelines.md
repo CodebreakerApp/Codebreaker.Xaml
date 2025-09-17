@@ -9,11 +9,13 @@ Prefer using modern APIs, e.g.
 * Minimal APIs instead of controllers
 * C# records if possible and useful instead of classes and structs
 * Primary records when possible
-* Use *nullable reference types*, *file-scoped
+* collection expressions
+* Use *nullable reference types*, *file-scoped namespaces*, *global usings*, *top-level statements* and other modern C# features
+* 
 
 ## Released versions
 
-Use released versions (e.g. .NET 6) to make it easier using the applications and services from all developers.
+Use released versions (e.g. .NET 9) to make it easier using the applications and services from all developers.
 
 > An exception from this rule can be applied if a pre-release version is not too far away, it's not expected the pre-release version adds many required changes on the code, and offers many advantages on the implementation (e.g. .NET 7 with Minimal APIs).  If needed, a long-time branch can be used to use pre-release versions where this exception does not apply.
 
