@@ -2,7 +2,7 @@
 
 ## Repository Guidelines Alignment
 
-This document extends the existing [guidelines.md](./guidelines.md) with .NET 9 specific guidance:
+This document extends the existing [guidelines.md](../guidelines.md) with .NET 9 specific guidance:
 
 - **Modern Technologies**: .NET 9 represents the latest modern technology stack
 - **Productivity**: Leverage .NET 9 features for shorter, more efficient code
@@ -21,6 +21,7 @@ This document extends the existing [guidelines.md](./guidelines.md) with .NET 9 
 - **Multi-targeting**: When supporting multiple frameworks, include `net9.0` as the primary target
 - **Platform-specific**: Use `net9.0-windows` for Windows-specific projects (WinUI, WPF)
 - **Mobile/Cross-platform**: Use appropriate TFMs like `net9.0-android`, `net9.0-ios` for mobile projects
+- **Library Projects**: Use multi-targeting for STS and LTS, thus `net9.0` and `net8.0` for maximum compatibility
 
 ### Project Types and Framework Usage
 
@@ -35,9 +36,9 @@ This document extends the existing [guidelines.md](./guidelines.md) with .NET 9 
 - **Avalonia cross-platform**: Use `net9.0`
 
 #### Libraries and Shared Code
-- **Shared libraries**: Use `net9.0` for maximum compatibility
+- **Shared libraries**: Use `net9.0` and `net8.0` for maximum compatibility
 - **Multi-target libraries**: Include `net9.0` as primary target, consider `net8.0` for backward compatibility if needed
-- **ViewModels**: Target `net9.0` primarily
+- **ViewModels**: Target `net9.0` and `net8.0` 
 
 ## Language and Code Style
 
