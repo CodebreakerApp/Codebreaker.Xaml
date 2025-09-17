@@ -16,7 +16,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CNInnovation.Codebreaker.Shared" Version="2.0.1-beta.1.9" />
+    <PackageReference Include="CNInnovation.Codebreaker.Shared" Version="2.0.1-beta.1.8" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0" />
     <PackageReference Include="Microsoft.Identity.Client" Version="4.66.1" />
