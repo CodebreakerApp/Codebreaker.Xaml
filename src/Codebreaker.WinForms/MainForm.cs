@@ -6,7 +6,7 @@ using Codebreaker.ViewModels.Models;
 /// <summary>
 /// Main form for the Codebreaker game.
 /// </summary>
-public partial class MainForm : Form
+public class MainForm : Form
 {
     private readonly GamePageViewModel _viewModel;
     private readonly IInfoBarService _infoBarService;
