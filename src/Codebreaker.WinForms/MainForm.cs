@@ -1,5 +1,8 @@
 namespace Codebreaker.WinForms;
 
+using Codebreaker.ViewModels.Contracts.Services;
+using Codebreaker.ViewModels.Models;
+
 /// <summary>
 /// Main form for the Codebreaker game.
 /// </summary>
@@ -7,7 +10,7 @@ public partial class MainForm : Form
 {
     private readonly GamePageViewModel _viewModel;
     private readonly IInfoBarService _infoBarService;
-
+    
     // UI Controls
     private Panel _startGamePanel = default!;
     private TextBox _usernameTextBox = default!;
@@ -20,6 +23,7 @@ public partial class MainForm : Form
     private ListBox _movesListBox = default!;
     private Label _statusLabel = default!;
     private ProgressBar _progressBar = default!;
+
     private TextBox _infoBarTextBox = default!;
 
     public MainForm()
@@ -71,7 +75,6 @@ public partial class MainForm : Form
         _movesListBox.DrawItem += MovesListBox_DrawItem;
         _movesListBox.MeasureItem += MovesListBox_MeasureItem;
         mainLayout.Controls.Add(_movesListBox, 0, 1);
-
         // 4. Status panel
         var statusPanel = new Panel { Dock = DockStyle.Fill };
         _statusLabel = new Label
@@ -188,7 +191,7 @@ public partial class MainForm : Form
 
     private void ViewModel_PropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        this.Invoke(() =>
+        Invoke(() =>
         {
             if (e.PropertyName == nameof(GamePageViewModel.GameStatus))
             {
@@ -214,7 +217,7 @@ public partial class MainForm : Form
 
     private void Messages_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
-        this.Invoke(() =>
+        Invoke(() =>
         {
             if (e.NewItems != null)
             {
@@ -363,7 +366,7 @@ public partial class MainForm : Form
             int spacing = 5;
 
             // Draw guess pegs
-            for (int i = 0; i < move.GuessPegs.Length; i++)
+            for (int i = 0; i < move.GuessPegs.Count; i++)
             {
                 var colorName = move.GuessPegs[i];
                 var color = Helpers.ColorHelper.GetColorFromName(colorName);

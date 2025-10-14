@@ -13,6 +13,12 @@ public class WinFormsDialogService : IDialogService
         return Task.CompletedTask;
     }
 
+    public Task ShowMessageAsync(string message)
+    {
+        MessageBox.Show(message, "Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        return Task.CompletedTask;
+    }
+
     public Task ShowErrorAsync(string title, string message)
     {
         MessageBox.Show(message, title, MessageBoxButtons.OK, MessageBoxIcon.Error);
