@@ -52,6 +52,7 @@
 * Blazor app to play games and show game results using [MudBlazor](https://www.mudblazor.com/), [FastBlazor](https://github.com/microsoft/fast-blazor), and native, pure Blazor with only CSS
 * WinUI app to play games calling the API, and show live services
 * WPF app to play games calling the API
+* WinForms app to play games calling the API (classic Windows desktop experience)
 * .NET MAUI App to play games calling the API (Android, iOS, Windows)
 
 * [Blazor Pure CSS](https://codebreaker-pure.azurewebsites.net/)
